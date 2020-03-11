@@ -1,0 +1,12 @@
+#ifndef ERRORS_H_INCLUDED
+#define ERRORS_H_INCLUDED
+
+#define MALLOC_ERROR -1
+
+#define EMPTY_ERROR -2
+
+#define NULL_ERROR -3
+
+#define UNEXPECTED_VALUE_ERROR -4
+
+#endif

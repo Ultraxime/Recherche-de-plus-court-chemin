@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 
-typedef char** DrawableMap;
+typedef (unsigned char)** DrawableMap;
 
 typedef bool** SimpleMap;
 

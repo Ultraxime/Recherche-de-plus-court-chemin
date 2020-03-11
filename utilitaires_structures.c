@@ -3,8 +3,14 @@
 
 #include "structures.h"
 #include "utilitaires_structures.h" 
+#include "errors.h"
 
 //Opérations sur les Element
+
+Element element_of_void(void* elt){
+
+	return *((Element*)&elt);
+}
 
 Element* create_Element(void* value){
 
@@ -15,7 +21,7 @@ Element* create_Element(void* value){
 	//l'Element n'a pu etre créé
 	if(elt == NULL){
 		printf("Error during creation of an Element\n");
-		exit(-1);
+		exit(MALLOC_ERROR);
 	}
 
 	//On initialise l'Element
@@ -28,6 +34,11 @@ Element* create_Element(void* value){
 
 //Operations sur les List
 
+List list_of_void(void* list){
+
+	return *((list*)&list);
+}
+
 List create_List(){
 
 	return NULL;
@@ -39,7 +50,7 @@ List push_List(Element* new, List list){
 	if(new->next != NULL){
 		printf("New is not an Element but a List\n
 			Use concatenate the next time\n");
-		exit(-2);
+		exit(UNEXPECTED_VALUE_ERROR);
 	}
 
 	new->next = list;
@@ -72,12 +83,12 @@ void* pop_List(List* list){
 
 	if(list == NULL){
 		printf("The List does not exist\n");
-		exit(-3);
+		exit(NULL_ERROR);
 	}
 
 	if(*list == NULL){
 		printf("You cannot pop Element from an empty List");
-		exit(-4);
+		exit(EMPTY_ERROR);
 	}
 
 	//On récupére la valeur du résultat
@@ -93,4 +104,36 @@ void* pop_List(List* list){
 	free(tmp);
 
 	return result;
+}
+
+
+//Operations sur les SimpleMap
+
+SimpleMap simpleMap_of_void(void* map){
+
+	return *((SimpleMap*)&map);
+}
+
+void clear_SimpleMap(SimpleMap map, int n){
+
+	for(int i = 0; i<n; i++)
+		free(map[i]);
+
+	free(map);
+}
+
+
+//Operations sur les DrawableMap
+
+DrawableMap drawableMap_of_void(void* map){
+
+	return *((DrawableMap*)&map);
+}
+
+void clear_DrawableMap(DrawableMap map, int n){
+
+	for(int i = 0; i<n; i++)
+		free(map[i]);
+
+	free(map);
 }
