@@ -16,7 +16,7 @@ struct Element{
 };
 
 typedef Element* List;
-
+ 
 
 
 #endif

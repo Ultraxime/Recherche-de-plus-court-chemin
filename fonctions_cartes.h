@@ -5,7 +5,7 @@
 
 SimpleMap random_SimpleMap(int,int);
 
-DrawableMap bruit_perlin_DrawableMap(int, int);
+DrawableMap bruit_perlin_DrawableMap(int,  int);
 
 DrawableMap random_DrawableMap(int, int, int, int);
 

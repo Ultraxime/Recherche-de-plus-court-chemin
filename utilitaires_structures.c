@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "structures.h"
-#include "utilitaires_structures.h"
+#include "utilitaires_structures.h" 
 
 //Opérations sur les Element
 
