@@ -106,6 +106,31 @@ void* pop_List(List* list){
 	return result;
 }
 
+int len_List(List list){
+
+	if(list == NULL)
+		return 0;
+
+	else
+		return 1 + len_List(list->next);
+}
+
+void clear_List(List list){
+
+	if(list == NULL)
+		return;
+
+	else{
+		clear_List( list->next );
+		free(list);
+	}
+}
+
+bool is_empty_List(List list){
+
+	return list == NULL;
+}
+
 
 //Operations sur les SimpleMap
 
@@ -136,4 +161,17 @@ void clear_DrawableMap(DrawableMap map, int n){
 		free(map[i]);
 
 	free(map);
+}
+
+
+//Operations sur les int
+
+int int_of_void(void* n){
+
+	return *( (int*) &n );
+}
+
+void* void_of_int(int n){
+
+	return *( (void**) &n );
 }

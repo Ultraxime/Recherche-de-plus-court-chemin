@@ -25,6 +25,12 @@ List push_value_List(void*, List);
 
 void* pop_List(List*); 
 
+int len_List(List);
+
+void clear_List(List);
+
+bool is_empty_List(List);
+
 
 //Operations sur les SimpleMap
 
@@ -39,4 +45,17 @@ DrawableMap drawableMap_of_void(void*);
 
 void clear_DrawableMap(DrawableMap, int);
 
+
+//Operations sur les LongMap
+
+LongMap longMap_of_void(void*);
+
+void clear_LongMap(LongMap, int);
+
+
+//Operations sur les int
+
+int int_of_void(void*);
+
+void* void_of_int(int);
 #endif

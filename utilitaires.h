@@ -6,5 +6,6 @@
 
 bool init();
 
+List facteurs_premiers(int);
 
 #endif

@@ -71,5 +71,80 @@ DrawableMap random_DrawableMap(int n, int m //Dimension de la carte a créer
 
 	for(int i = 0; i < n; i+=pasN){
 		
+		for(int k = 0; k < m; k+=pasM){
+
+			for(int j = 1; j < pasM; j++){
+
+				map[i][k+j] = (unsigned char) ( ( j * (unsigned int) map[i][ k + pasM ] + (pasM - j) * (unsigned int) map[i][k]) / pasM );			//barycentre des point aléatoire pour obtenir un grandient sur les lignes avec les aléas
+
+			}
+		}
 	}
+
+	for(int j = 0; j < m; j++){
+
+		for(int k = 0; k < n; k+=pasN){
+
+			for(int i = 1; i< pasN; i++){
+
+				map[k+i][j] = (unsigned char) ( ( i * (unsigned int) map[ k + pasN][j] + (pasN - i) * (unsigned int) map[k][j] ) / pasN );			//barycentre sur les colonnes
+			}
+		}
+	}
+
+	return map;
+}
+
+DrawableMap bruit_Perlin_DrawableMap(int n; int m){
+
+	//On choisit comme largeur pour les cartes temporraire entre n ou n+1 comme celui dont le précedent a le plus de diviseurs premiers
+
+	List divN = facteurs_premiers(n-1);
+	List divN1 = facteurs_premiers(n);
+
+	int largeur = 0;
+	
+	if( len_List(divN) > len_List(divN1) ){
+
+		clear_List(divN1);
+
+		largeur = n;
+	}else{
+
+		clear_List(divN);
+
+		divN = divN1;
+
+		largeur = n+1;
+	}
+
+	//On fait la même chose pour la longueur
+
+	List divM = facteurs_premiers(m-1);
+	List divM1 = facteurs_premiers(m);
+
+	int longueur = 0;
+
+	if( len_List(divM) > len_List(divM1) ){
+
+		clear_List(divM1);
+
+		longueur = m;
+	}else{
+
+		clear_List(divM);
+
+		divM = divM1;
+
+		longueur = m+1;
+	}
+
+	//Creation de carte avec des gradiants de plus en plus fin
+
+	int finesseN = 1;
+	int finesseM = 1;
+
+	List maps = NULL;			//Creation de la List qui contiendra les cartes à sommer
+
+	while()
 }
