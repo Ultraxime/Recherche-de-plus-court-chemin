@@ -19,4 +19,11 @@ typedef Element* List;
 
 typedef (unsigned long)** LongMap;
 
+typedef struct Coordonnee Coordonnee;
+
+struct Coordonnee{
+	unsigned int x;
+	unsigned int y;
+};
+
 #endif

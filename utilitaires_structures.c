@@ -180,6 +180,29 @@ void clear_LongMap(LongMap map, int n){
 	free(map);
 }
 
+unsigned long max_LongMap(LongMap map, int n, int m){
+
+	unsigned long max = map[0][0];
+
+	for(int i = 0; i < n; i++)
+		for(int j = 0; j < m; j++)
+			if(max < map[i][j])
+				max = map[i][j];
+
+}
+
+unsigned long min_LongMap(LongMap map, int n, int m){
+
+	unsigned long min = map[0][0];
+
+	for(int i = 0; i < n; i++)
+		for(int j = 0; j < m; j++)
+			if(min > map[i][j])
+				min = map[i][j];
+
+}
+
+
 //Operations sur les int
 
 int int_of_void(void* n){

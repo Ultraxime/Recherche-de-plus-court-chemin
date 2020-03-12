@@ -9,4 +9,6 @@
 
 #define UNEXPECTED_VALUE_ERROR -4
 
+#define LOCK_SURFACE_ERROR -5
+
 #endif

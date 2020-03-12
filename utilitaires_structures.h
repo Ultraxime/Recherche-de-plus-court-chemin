@@ -52,6 +52,10 @@ LongMap longMap_of_void(void*);
 
 void clear_LongMap(LongMap, int);
 
+unsigned long max_LongMap(LongMap, int, int);
+
+unsigned long min_LongMap(LongMap, int, int);
+
 
 //Operations sur les int
 

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <SDL/SDL.h>
 
 #include "structures.h"
 #include "fonctions_cartes.h"
@@ -197,13 +198,114 @@ DrawableMap bruit_Perlin_DrawableMap(int n; int m){
 			longMap[i][j] = puissance * (unsigned long) tmpMap[i][j];
 	}
 
+	puissance +=PUISSANCE;
+
 	clear_DrawableMap(tmpMap, largeur);
 
 	while( !is_empty_List(maps) ){
 	
 		tmpMap = pop_List( &maps );
 
-		for(int)
+		for(int i = 0; i < n; i++)
 
+			for(int j = 0; j < m; j++)
+
+				longMap[i][j] += puissance * (unsigned long) tmpMap[i][j];
+
+		clear_DrawableMap(tmpMap, largeur);
+
+		puissance += PUISSANCE;
 	}
+
+	unsigned long min = min_LongMap(longMap, n, m);
+
+	unsigned long max = max_LongMap(longMap, n, m) - min;
+
+	DrawableMap map = NULL;
+
+	map = malloc(n*sizeof(char*));
+
+	if(map == NULL){
+		printf("Cannot create the main table\n");
+		exit(MALLOC_ERROR);
+	}
+
+	for(int i = 0; i < n; i++){
+
+		map[i] = malloc(m*sizeof(char));
+
+		if( map[i] == NULL ){
+			printf("Cannot create table %d\n", i);
+			exit(MALLOC_ERROR);
+		}
+
+		for(int j = 0; j < m; j++)
+
+			map[i][j] = (unsigned char) ( ( 255 * (longMap[i][j] - min)) / max );
+	}
+
+	clear_LongMap(longMap, n);
+
+	return map;
+}
+
+void draw_DrawableMap(DrawableMap map, int n, int m, SDL_Surface* scrren, Coordonnee begin, Coordonnee end){
+
+	if(SDL_LockSurface(screen) < 0 ){
+        printf("Unable to lock screen : %s\n", SDL_GetError());
+        exit(LOCK_SURFACE_ERROR);
+    }
+
+    Uint32 *pixels;
+    pixels = screen->pixels;
+
+    Uint32 darkBlue = SDL_MapRGB(screen->format, 70, 169, 224);
+    Uint32 blue = SDL_MapRGB(screen->format, 160, 203, 237);
+    Uint32 lightBlue = SDL_MapRGB(screen->format, 213, 234, 248);
+    
+    Uint32 green = SDL_MapRGB(screen->format, 167, 210, 101);
+    Uint32 lightOrange = SDL_MapRGB(screen->format, 254, 240, 191);
+    Uint32 orange = SDL_MapRGB(screen->format, 251, 207, 112);
+    Uint32 brown = SDL_MapRGB(screen->format, 243, 159, 20);
+
+    for(int i = 0; i < n; i++){
+
+    	for(int j = 0; j < m; j++){
+
+    		if(map[i][j] < (255 - H) / 4){
+    			
+    			pixels[i*m + j] = darkBlue;
+    		
+    		}else if(map[i][j] < 3 * (unsigned int)(255 - H) / 4){
+
+    			pixels[i*m + j] = blue;
+
+    		}else if(map[i][j] < 255 - H){
+
+    			pixels[i*m + j] = lightBlue;
+
+    		}else if(map[i][j] > 255 - H / 8){
+
+    			pixels[i*m + j] = brown;
+    			
+    		}else if(map[i][j] > 255 - H / 2){
+
+    			pixels[i*m + j] = orange;
+    			
+    		}else if(map[i][j] > 255 - (3 * (int) H ) / 4){
+
+    			pixels[i*m + j] = lightOrange;
+    			
+    		}else{
+
+    			pixels[i*m + j] = green;
+
+    		}
+    	}
+    }
+
+    SDL_UnlockSurface(screen);
+
+    SDL_Flip(screen);
+
 }
