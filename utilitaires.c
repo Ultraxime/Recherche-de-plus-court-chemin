@@ -33,3 +33,26 @@ List facteurs_premiers(int n){
 	else
 		return push_value_List(i, facteurs_premiers( n/i ));
 }
+
+void pause(){
+
+	bool done = true;
+
+	while(done){
+
+		SDL_Event event;
+
+		while(SDL_PollEvent(&event)){		//On attend un event
+
+			switch(event.type){
+
+				case SDL_KEYDOWN:			//Si une touche a été pressée
+					done = false;
+					break;
+
+				default :
+					break;
+			}
+		}
+	}
+}

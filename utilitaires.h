@@ -8,4 +8,6 @@ bool init();
 
 List facteurs_premiers(int);
 
+void pause();
+
 #endif
