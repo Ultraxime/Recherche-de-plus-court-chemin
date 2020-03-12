@@ -3,5 +3,6 @@
 
 #define H 127			//altitude de la plage sur 255
 
+#define PUISSANCE 10 	//pas avec lequel on ajoute les cartes pour le bruit de Perlin
 
 #endif

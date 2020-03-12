@@ -164,6 +164,22 @@ void clear_DrawableMap(DrawableMap map, int n){
 }
 
 
+//Operations sur les LongMap
+
+LongMap longMap_of_void(void* map){
+
+	return *( (LongMap*) &map );
+}
+
+void clear_LongMap(LongMap map, int n){
+
+	for(int i = 0; i < n; i++)
+
+		free(map[i]);
+
+	free(map);
+}
+
 //Operations sur les int
 
 int int_of_void(void* n){

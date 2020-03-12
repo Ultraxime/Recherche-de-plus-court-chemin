@@ -141,10 +141,69 @@ DrawableMap bruit_Perlin_DrawableMap(int n; int m){
 
 	//Creation de carte avec des gradiants de plus en plus fin
 
-	int finesseN = 1;
-	int finesseM = 1;
+	int pasN = largeur - 1;
+	int pasM = longeur - 1;
 
-	List maps = NULL;			//Creation de la List qui contiendra les cartes à sommer
+	List maps = random_DrawableMap(largeur, longueur, pasN, pasM);			//Creation de la List qui contiendra les cartes à sommer
 
-	while()
+	while(!is_empty_List(divN) && !is_empty_List(divM)){
+		
+		if(pasN < pasM)
+			pasM /= pop_List( &divM );
+		else
+			pasN *= pop_List( &divN );
+
+		maps = push_value_List( random_DrawableMap(largeur, longueur, pasN, pasM), maps);
+	}
+
+	while( !is_empty_List(divN) ){
+
+		pasN /= pop_List( &divN );
+
+		maps = push_value_List( random_DrawableMap(largeur, longueur, pasN, pasM), maps);	
+	}
+
+	while( !is_empty_List(divM) ){
+
+		pasM /= pop_List( &divM );
+
+		maps = push_value_List( random_DrawableMap(largeur, longueur, pasN, pasM), maps);
+	}
+
+	DrawableMap tmpMap = pop_List( &maps );
+
+	LongMap longMap = NULL;
+
+	longMap = malloc(n*sizeof(long*));
+
+	if(longMap == NULL){
+		printf("Cannot create main table\n");
+		error(MALLOC_ERROR);
+	}
+
+	unsigned long puissance = 1;
+
+	for(int i = 0; i < n; i++){
+
+		longMap[i] = malloc(m*sizeof(long));
+
+		if(longMap[i] == NULL){
+			printf("Cannot create table %d\n", i);
+			error(MALLOC_ERROR);
+		}
+
+		for(int j = 0; j < m; j++)
+
+			longMap[i][j] = puissance * (unsigned long) tmpMap[i][j];
+	}
+
+	clear_DrawableMap(tmpMap, largeur);
+
+	while( !is_empty_List(maps) ){
+	
+		tmpMap = pop_List( &maps );
+
+		for(int)
+
+	}
 }
