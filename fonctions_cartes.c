@@ -36,7 +36,7 @@ SimpleMap simpleMap_from_DrawableMap(DrawableMap origin, int n, int m){
 }
 
 
-DrawableMap random_DrawableMap(int n, int m //Dimension de la carte a créer
+DrawableMap random_DrawableMap(int n, int m, //Dimension de la carte a créer
 								int pasN, int pasM ){//pas pour le gradient
 	DrawableMap map = NULL;
 
@@ -56,16 +56,16 @@ DrawableMap random_DrawableMap(int n, int m //Dimension de la carte a créer
 			exit(MALLOC_ERROR);
 		}
 
-		if(i%pasN == O){
+		if(i%pasN == 0){
 
 			for(int j = 0 ; j < m ; j++){
-				if(j%pasM == O)
+				if(j%pasM == 0)
 					map[i][j] = rand() % 255;
 				else
 					map[i][j] = 0;
 			}
 		}else{
-			for(int j = 0 ; < m ; j++)
+			for(int j = 0 ; j < m ; j++)
 				map[i][j] = 0;
 		}
 	}
@@ -96,7 +96,7 @@ DrawableMap random_DrawableMap(int n, int m //Dimension de la carte a créer
 	return map;
 }
 
-DrawableMap bruit_Perlin_DrawableMap(int n; int m){
+DrawableMap bruit_Perlin_DrawableMap(int n, int m){
 
 	//On choisit comme largeur pour les cartes temporraire entre n ou n+1 comme celui dont le précedent a le plus de diviseurs premiers
 
@@ -143,35 +143,35 @@ DrawableMap bruit_Perlin_DrawableMap(int n; int m){
 	//Creation de carte avec des gradiants de plus en plus fin
 
 	int pasN = largeur - 1;
-	int pasM = longeur - 1;
+	int pasM = longueur - 1;
 
 	List maps = random_DrawableMap(largeur, longueur, pasN, pasM);			//Creation de la List qui contiendra les cartes à sommer
 
 	while(!is_empty_List(divN) && !is_empty_List(divM)){
 		
 		if(pasN < pasM)
-			pasM /= pop_List( &divM );
+			pasM /= int_of_void( pop_List( &divM ) );
 		else
-			pasN *= pop_List( &divN );
+			pasN /= int_of_void( pop_List( &divN ) );
 
 		maps = push_value_List( random_DrawableMap(largeur, longueur, pasN, pasM), maps);
 	}
 
 	while( !is_empty_List(divN) ){
 
-		pasN /= pop_List( &divN );
+		pasN /= int_of_void( pop_List( &divN ) );
 
 		maps = push_value_List( random_DrawableMap(largeur, longueur, pasN, pasM), maps);	
 	}
 
 	while( !is_empty_List(divM) ){
 
-		pasM /= pop_List( &divM );
+		pasM /= int_of_void( pop_List( &divM ) );
 
 		maps = push_value_List( random_DrawableMap(largeur, longueur, pasN, pasM), maps);
 	}
 
-	DrawableMap tmpMap = pop_List( &maps );
+	DrawableMap tmpMap = drawableMap_of_void( pop_List( &maps ) );
 
 	LongMap longMap = NULL;
 
@@ -204,7 +204,7 @@ DrawableMap bruit_Perlin_DrawableMap(int n; int m){
 
 	while( !is_empty_List(maps) ){
 	
-		tmpMap = pop_List( &maps );
+		tmpMap = drawableMap_of_void( pop_List( &maps ) );
 
 		for(int i = 0; i < n; i++)
 
@@ -249,7 +249,7 @@ DrawableMap bruit_Perlin_DrawableMap(int n; int m){
 	return map;
 }
 
-void draw_DrawableMap(DrawableMap map, int n, int m, SDL_Surface* scrren, Coordonnee begin, Coordonnee end){
+void draw_DrawableMap(DrawableMap map, int n, int m, SDL_Surface* screen, Coordonnee begin, Coordonnee end){
 
 	if(SDL_LockSurface(screen) < 0 ){
         printf("Unable to lock screen : %s\n", SDL_GetError());
@@ -272,27 +272,27 @@ void draw_DrawableMap(DrawableMap map, int n, int m, SDL_Surface* scrren, Coordo
 
     	for(int j = 0; j < m; j++){
 
-    		if(map[i][j] < (255 - H) / 4){
+    		if(map[i][j] < H / 4){
     			
     			pixels[i*m + j] = darkBlue;
     		
-    		}else if(map[i][j] < 3 * (unsigned int)(255 - H) / 4){
+    		}else if(map[i][j] < (3 * (unsigned int) H ) / 4){
 
     			pixels[i*m + j] = blue;
 
-    		}else if(map[i][j] < 255 - H){
+    		}else if(map[i][j] < H){
 
     			pixels[i*m + j] = lightBlue;
 
-    		}else if(map[i][j] > 255 - H / 8){
+    		}else if(map[i][j] > 255 - (255 - H) / 8){
 
     			pixels[i*m + j] = brown;
     			
-    		}else if(map[i][j] > 255 - H / 2){
+    		}else if(map[i][j] > 255 - (255 - H) / 2){
 
     			pixels[i*m + j] = orange;
     			
-    		}else if(map[i][j] > 255 - (3 * (int) H ) / 4){
+    		}else if(map[i][j] > 255 - (3 * (unsigned int) (255 - H) ) / 4){
 
     			pixels[i*m + j] = lightOrange;
     			

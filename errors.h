@@ -11,4 +11,6 @@
 
 #define LOCK_SURFACE_ERROR -5
 
+#define INIT_ERROR -6
+
 #endif

@@ -1,7 +1,7 @@
 #ifndef UILITAIRES_STRUCTURES_H_INCLUDED
 #define UILITAIRES_STRUCTURES_H_INCLUDED
 
-#include "structure.h"
+#include "structures.h"
 
 //Operation sur les Element
 
@@ -56,6 +56,14 @@ unsigned long max_LongMap(LongMap, int, int);
 
 unsigned long min_LongMap(LongMap, int, int);
 
+
+//Operations sur les Coordonnee
+
+Coordonnee create_Coordonnee(unsigned int, unsigned int);
+
+Coordonnee random_Coordonnee(unsigned int, unsigned int);
+
+bool is_equal_Coordonnee(Coordonnee, Coordonnee);
 
 //Operations sur les int
 

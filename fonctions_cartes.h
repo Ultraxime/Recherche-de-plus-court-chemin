@@ -3,7 +3,7 @@
 
 #include <SDL/SDL.h>
 
-#include "strucures.h"
+#include "structures.h"
 
 SimpleMap simpleMap_from_DrawableMap(DrawableMap, int, int);
 

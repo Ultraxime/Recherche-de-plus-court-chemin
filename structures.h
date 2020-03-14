@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 
-typedef (unsigned char)** DrawableMap;
+typedef unsigned char** DrawableMap;
 
 typedef bool** SimpleMap;
 
@@ -17,7 +17,7 @@ struct Element{
 
 typedef Element* List;
 
-typedef (unsigned long)** LongMap;
+typedef unsigned long** LongMap;
 
 typedef struct Coordonnee Coordonnee;
 

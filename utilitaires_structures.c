@@ -36,7 +36,7 @@ Element* create_Element(void* value){
 
 List list_of_void(void* list){
 
-	return *((list*)&list);
+	return *( (List*) &list);
 }
 
 List create_List(){
@@ -48,8 +48,7 @@ List push_List(Element* new, List list){
 
 	//Si l'Element est une liste on ne peut le mettre en tête de List, il faut utiliser concatenate
 	if(new->next != NULL){
-		printf("New is not an Element but a List\n
-			Use concatenate the next time\n");
+		printf("New is not an Element but a List\nUse concatenate the next time\n");
 		exit(UNEXPECTED_VALUE_ERROR);
 	}
 
@@ -64,15 +63,15 @@ List concatenate_List(List list1, List list2){
 		return list2;
 
 	if(list1->next == NULL)
-		push(list1, list2);
+		push_List(list1, list2);
 
 	else 
-		concatenate(list1->suivant, list2);
+		concatenate_List(list1->next, list2);
 
 	return list1;
 }
 
-List push_Value_List(void* value, List list){
+List push_value_List(void* value, List list){
 
 	Element* elt = create_Element(value);
 
@@ -200,6 +199,29 @@ unsigned long min_LongMap(LongMap map, int n, int m){
 			if(min > map[i][j])
 				min = map[i][j];
 
+}
+
+
+//Operations sur les Coordonnee
+
+Coordonnee create_Coordonnee(unsigned int x, unsigned int y){
+	
+	Coordonnee coord;
+	
+	coord.x = x;
+	coord.y = y;
+
+	return coord;
+}
+
+Coordonnee random_Coordonnee(unsigned int n, unsigned int m){
+
+	return create_Coordonnee( rand() % n, rand() % m);
+}
+
+bool is_equal_Coordonnee(Coordonnee coord1, Coordonnee coord2){
+
+	return coord1.x == coord2.x && coord1.y == coord2.y;
 }
 
 
