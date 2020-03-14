@@ -62,4 +62,5 @@ unsigned long min_LongMap(LongMap, int, int);
 int int_of_void(void*);
 
 void* void_of_int(int);
+
 #endif
