@@ -10,6 +10,8 @@
 
 int main(){
 
+	printf("Starting up");
+
 	if(!init()){
 		printf("Error during initialization");
 		return INIT_ERROR;
@@ -24,8 +26,7 @@ int main(){
     }
 
     SDL_WM_SetCaption("Recherche de plus court chemin", NULL);
-
-
+	
 	DrawableMap map = bruit_Perlin_DrawableMap(N,M);
 
 	Coordonnee begin;
@@ -44,4 +45,6 @@ int main(){
 
 
 	draw_DrawableMap(map, N, M, screen, begin, end);
+
+	return 0;
 }

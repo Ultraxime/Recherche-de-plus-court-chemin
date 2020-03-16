@@ -4,6 +4,8 @@
 
 #include "structures.h"
 #include "fonctions_cartes.h"
+#include "utilitaires_structures.h"
+#include "utilitaires.h"
 #include "errors.h"
 #include "constantes.h"
 
@@ -100,52 +102,68 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m){
 
 	//On choisit comme largeur pour les cartes temporraire entre n ou n+1 comme celui dont le précedent a le plus de diviseurs premiers
 
-	List divN = facteurs_premiers(n-1);
-	List divN1 = facteurs_premiers(n);
+	List divN1 = facteurs_premiers(n-1);
+	List divN2 = facteurs_premiers(n);
+
+	List divN;
 
 	int largeur = 0;
 	
-	if( len_List(divN) > len_List(divN1) ){
+	if( len_List(divN1) > len_List(divN2) ){
+
+		clear_List(divN2);
+
+		divN = divN1;
+
+		pause();
+
+		largeur = n;
+
+	}else{
 
 		clear_List(divN1);
 
-		largeur = n;
-	}else{
+		divN = divN2;
 
-		clear_List(divN);
-
-		divN = divN1;
+		pause();
 
 		largeur = n+1;
 	}
 
 	//On fait la même chose pour la longueur
 
-	List divM = facteurs_premiers(m-1);
-	List divM1 = facteurs_premiers(m);
+	List divM1 = facteurs_premiers(m-1);
+	List divM2 = facteurs_premiers(m);
+
+	List divM;
 
 	int longueur = 0;
 
-	if( len_List(divM) > len_List(divM1) ){
+	if( len_List(divM1) > len_List(divM2) ){
 
-		clear_List(divM1);
-
-		longueur = m;
-	}else{
-
-		clear_List(divM);
+		clear_List(divM2);
 
 		divM = divM1;
 
+		longueur = m;
+
+	}else{
+
+		clear_List(divM1);
+
+		divM = divM2;
+
 		longueur = m+1;
 	}
+
+	pause();
 
 	//Creation de carte avec des gradiants de plus en plus fin
 
 	int pasN = largeur - 1;
 	int pasM = longueur - 1;
 
-	List maps = random_DrawableMap(largeur, longueur, pasN, pasM);			//Creation de la List qui contiendra les cartes à sommer
+	List maps = create_Element( random_DrawableMap(largeur, longueur, pasN, pasM) );			//Creation de la List qui contiendra les cartes à sommer
 
 	while(!is_empty_List(divN) && !is_empty_List(divM)){
 		
@@ -179,7 +197,7 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m){
 
 	if(longMap == NULL){
 		printf("Cannot create main table\n");
-		error(MALLOC_ERROR);
+		exit(MALLOC_ERROR);
 	}
 
 	unsigned long puissance = 1;
@@ -190,7 +208,7 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m){
 
 		if(longMap[i] == NULL){
 			printf("Cannot create table %d\n", i);
-			error(MALLOC_ERROR);
+			exit(MALLOC_ERROR);
 		}
 
 		for(int j = 0; j < m; j++)
