@@ -97,7 +97,7 @@ void* pop_List(List* list){
 	Element* tmp = (*list);
 
 	//On change la List vers laquelle pointe notre pointeur
-	list = tmp->next;
+	*list = tmp->next;
 
 	//On detruit en mémoire l'Element
 	free(tmp);
