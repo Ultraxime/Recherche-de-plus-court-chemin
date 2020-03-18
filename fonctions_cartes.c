@@ -74,7 +74,7 @@ DrawableMap random_DrawableMap(int n, int m, //Dimension de la carte a créer
 
 	for(int i = 0; i < n; i+=pasN){
 		
-		for(int k = 0; k < m; k+=pasM){
+		for(int k = 0; k < m - 1; k+=pasM){
 
 			for(int j = 1; j < pasM; j++){
 
@@ -86,7 +86,7 @@ DrawableMap random_DrawableMap(int n, int m, //Dimension de la carte a créer
 
 	for(int j = 0; j < m; j++){
 
-		for(int k = 0; k < n; k+=pasN){
+		for(int k = 0; k < n - 1; k+=pasN){
 
 			for(int i = 1; i< pasN; i++){
 
