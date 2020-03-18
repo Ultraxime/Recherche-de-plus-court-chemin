@@ -115,8 +115,6 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m){
 
 		divN = divN1;
 
-		pause();
-
 		largeur = n;
 
 	}else{
@@ -124,8 +122,6 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m){
 		clear_List(divN1);
 
 		divN = divN2;
-
-		pause();
 
 		largeur = n+1;
 	}
@@ -139,22 +135,40 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m){
 
 	int longueur = 0;
 
+	printf("debut");
+
 	if( len_List(divM1) > len_List(divM2) ){
+
+		printf("11");
 
 		clear_List(divM2);
 
+		printf("12");
+
 		divM = divM1;
+
+		printf("13");
 
 		longueur = m;
 
 	}else{
 
+		printf("21");
+	
 		clear_List(divM1);
+
+		printf("22");
 
 		divM = divM2;
 
-		longueur = m+1;
+		printf("23");
+
+		pause();
+
+		longueur = m + 1;
 	}
+
+	printf("fin");
 
 	pause();
 

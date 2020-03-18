@@ -224,6 +224,73 @@ bool is_equal_Coordonnee(Coordonnee coord1, Coordonnee coord2){
 	return coord1.x == coord2.x && coord1.y == coord2.y;
 }
 
+Coordonnee coordonnee_of_void(void* coordonnee){
+
+	return *( (Coordonnee*) &coordonnee );
+}
+
+
+//Operations sur les Individu
+
+Individu create_Individu( unsigned int forward,
+						  unsigned int right,
+					 	  unsigned int backward,
+						  unsigned int left,
+						  unsigned char direction){
+
+	Individu individu;
+
+	unsigned int total = forward + right + backward + left;
+
+	individu.forward = ( forward * 255 ) / total;
+	individu.right = ( right * 255 ) / total;
+	individu.backward = ( backward * 255 ) / total;
+	individu.left = ( left * 255 ) / total;
+
+	individu.direction = direction;
+	
+	return individu;
+}
+
+Individu random_Individu(){
+
+	return create_Individu( rand() % 256,
+							rand() % 256,
+							rand() % 256,
+							rand() % 256,
+							rand() % 4);
+}
+
+
+//Operations sur les Resultat
+
+Resultat create_Resultat(Population population,
+						unsigned int* scores,
+						List* chemins){
+
+	Resultat resultat;
+
+	resultat.population = population;
+	resultat.scores = scores;
+	resultat.chemins = chemins;
+
+	return resultat;
+}
+
+
+//Operations sur les Couple
+
+Couple create_Couple(void* key, void* value){
+
+	Couple couple;
+
+	couple.key = key;
+	couple.value = value;
+
+	return couple;
+}
+
+
 
 //Operations sur les int
 

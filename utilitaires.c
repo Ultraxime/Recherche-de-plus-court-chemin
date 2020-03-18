@@ -26,22 +26,17 @@ bool init(){
 
 List facteurs_premiers(int n){
 
-	if(n = 0)
-		return create_List();
+	printf("%d\n",n);
 
-	if(n = 1)
-		return create_Element(void_of_int(1));
+	if(n <= 1)
+		return create_List();
 
 	int i = 2;
 
 	while( n%i != 0 )
 		i++;
 
-	if(n/i == 1)
-		return create_Element(void_of_int(n));
-	
-	else
-		return push_value_List( void_of_int(i), facteurs_premiers( n/i ));
+	return push_value_List( void_of_int(i), facteurs_premiers( n/i ));
 }
 
 void pause(){
@@ -65,4 +60,44 @@ void pause(){
 			}
 		}
 	}
+}
+
+int* sort(int* value, unsigned int n, unsigned int i){
+
+	int* classement;
+
+	if( i <= 0){
+		
+		classement = malloc(n * sizeof(int));
+
+		if(classement == NULL){
+			printf("Cannot create the table");
+			exit(MALLOC_ERROR);
+		}
+
+		classement[0] = 0;
+
+		return classement;
+	}
+
+	classement = sort(value, n, i-1);
+
+	unsigned int j = 0;
+
+	while( value[classement[j]] < value[i] && j < i )
+		j++;
+
+	int tmp = i;
+
+	while(j < i){
+
+		classement[i] = classement[i-1];
+		
+		i--;
+	}
+
+	classement[j] = tmp;
+
+	return classement;
+
 }

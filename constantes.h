@@ -9,4 +9,10 @@
 
 #define M 1080
 
+#define MUTATION 100000	//Probabilite de mutation
+
+#define NB 1000			//Taille d'une population
+
+#define LIMITE N*M 		//Longueur max d'un chemin
+
 #endif

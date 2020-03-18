@@ -10,4 +10,6 @@ List facteurs_premiers(int);
 
 void pause();
 
+int* sort(int*, unsigned int, unsigned int);
+
 #endif
