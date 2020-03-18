@@ -16,6 +16,6 @@ Couple generation_simple(SimpleMap, Coordonnee, Coordonnee, Population);
 
 Couple life_simple(SimpleMap, Coordonnee, Coordonnee, Individu);
 
-Coordonnee next_step_simple(SimpleMap, Coordonnee Individu);
+Coordonnee next_step_simple(SimpleMap, Coordonnee, Individu);
 
 #endif

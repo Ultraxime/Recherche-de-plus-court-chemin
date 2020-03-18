@@ -135,49 +135,29 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m){
 
 	int longueur = 0;
 
-	printf("debut");
-
 	if( len_List(divM1) > len_List(divM2) ){
-
-		printf("11");
 
 		clear_List(divM2);
 
-		printf("12");
-
 		divM = divM1;
-
-		printf("13");
 
 		longueur = m;
 
 	}else{
 
-		printf("21");
-	
 		clear_List(divM1);
-
-		printf("22");
 
 		divM = divM2;
 
-		printf("23");
-
-		pause();
-
 		longueur = m + 1;
 	}
-
-	printf("fin");
-
-	pause();
 
 	//Creation de carte avec des gradiants de plus en plus fin
 
 	int pasN = largeur - 1;
 	int pasM = longueur - 1;
 
-	List maps = create_Element( random_DrawableMap(largeur, longueur, pasN, pasM) );			//Creation de la List qui contiendra les cartes à sommer
+	List maps = create_Element( random_DrawableMap(largeur - 1, longueur - 1, pasN, pasM) );			//Creation de la List qui contiendra les cartes à sommer
 
 	while(!is_empty_List(divN) && !is_empty_List(divM)){
 		
@@ -186,21 +166,21 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m){
 		else
 			pasN /= int_of_void( pop_List( &divN ) );
 
-		maps = push_value_List( random_DrawableMap(largeur, longueur, pasN, pasM), maps);
+		maps = push_value_List( random_DrawableMap(largeur - 1, longueur - 1, pasN, pasM), maps);
 	}
 
 	while( !is_empty_List(divN) ){
 
 		pasN /= int_of_void( pop_List( &divN ) );
 
-		maps = push_value_List( random_DrawableMap(largeur, longueur, pasN, pasM), maps);	
+		maps = push_value_List( random_DrawableMap(largeur - 1, longueur - 1, pasN, pasM), maps);	
 	}
 
 	while( !is_empty_List(divM) ){
 
 		pasM /= int_of_void( pop_List( &divM ) );
 
-		maps = push_value_List( random_DrawableMap(largeur, longueur, pasN, pasM), maps);
+		maps = push_value_List( random_DrawableMap(largeur - 1, longueur - 1, pasN, pasM), maps);
 	}
 
 	DrawableMap tmpMap = drawableMap_of_void( pop_List( &maps ) );

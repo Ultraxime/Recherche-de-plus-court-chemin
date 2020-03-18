@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "structures.h"
 #include "fonctions_genetiques.h" 
+#include "utilitaires_structures.h"
 #include "errors.h"
 #include "constantes.h"
 
@@ -35,7 +37,7 @@ Population evolution(Population original, int* rank){
 
 	for(int i = 0; i < NB; i++){
 
-		if(rand() % NB <= exp(-i) * NB){
+		if(rand() % NB <= exp( -i ) * NB){
 
 			population[kept] = original[i];
 
@@ -129,9 +131,9 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 	for(int i = 0; i < NB; i++){
 		Couple couple = life_simple(map, begin, end, population[i]);
 
-		scores[i] = couple.key;
+		scores[i] = int_of_void(couple.key);
 
-		chemins[i] = couple.value;
+		chemins[i] = list_of_void(couple.value);
 	}
 
 	return create_Couple(scores, chemins);
@@ -145,20 +147,20 @@ Couple life_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Individu ind
 
 	int count = 0;
 
-	while( !is_equal(currentPosition, end) && count < LIMITE){
-		chemin = push_value_List(currentPosition, chemin);
+	while( !is_equal_Coordonnee(currentPosition, end) && count < LIMITE){
+		chemin = push_value_List( void_of_Coordonnee(currentPosition), chemin);
 
 		currentPosition = next_step_simple(map, currentPosition, individu);
 
 		count ++;
 	}
 
-	chemin = push_value_List(currentPosition, chemin);
+	chemin = push_value_List( void_of_Coordonnee(currentPosition), chemin);
 
-	return create_Couple(count, chemin);
+	return create_Couple( void_of_int(count), chemin);
 }
 
 Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu individu){
 
-	
+	return currentPosition;
 }

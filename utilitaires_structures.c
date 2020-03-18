@@ -229,6 +229,11 @@ Coordonnee coordonnee_of_void(void* coordonnee){
 	return *( (Coordonnee*) &coordonnee );
 }
 
+void* void_of_Coordonnee(Coordonnee coordonnee){
+	return *( (void**) &coordonnee );
+}
+
+
 
 //Operations sur les Individu
 

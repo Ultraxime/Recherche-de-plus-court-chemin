@@ -1,5 +1,5 @@
-#ifndef UILITAIRES_STRUCTURES_H_INCLUDED
-#define UILITAIRES_STRUCTURES_H_INCLUDED
+#ifndef UTILITAIRES_STRUCTURES_H_INCLUDED
+#define UTILITAIRES_STRUCTURES_H_INCLUDED
 
 #include "structures.h"
 
@@ -72,6 +72,8 @@ Coordonnee random_Coordonnee(unsigned int, unsigned int);
 bool is_equal_Coordonnee(Coordonnee, Coordonnee);
 
 Coordonnee cordonnee_of_void(void*);
+
+void* void_of_Coordonnee(Coordonnee);
 
 
 
