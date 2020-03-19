@@ -37,7 +37,7 @@ Population evolution(Population original, int* rank){
 
 	for(int i = 0; i < NB; i++){
 
-		if(rand() % NB <= exp( -i ) * NB){
+		if(rand() % NB <= NB * exp(-i)){
 
 			population[kept] = original[i];
 

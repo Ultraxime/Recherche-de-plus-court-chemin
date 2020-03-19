@@ -188,6 +188,8 @@ unsigned long max_LongMap(LongMap map, int n, int m){
 			if(max < map[i][j])
 				max = map[i][j];
 
+	return max;
+
 }
 
 unsigned long min_LongMap(LongMap map, int n, int m){
@@ -198,6 +200,8 @@ unsigned long min_LongMap(LongMap map, int n, int m){
 		for(int j = 0; j < m; j++)
 			if(min > map[i][j])
 				min = map[i][j];
+
+	return min;
 
 }
 

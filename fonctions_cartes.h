@@ -7,7 +7,7 @@
 
 SimpleMap simpleMap_from_DrawableMap(DrawableMap, int, int);
 
-DrawableMap bruit_Perlin_DrawableMap(int, int);
+DrawableMap bruit_Perlin_DrawableMap(int, int,SDL_Surface*);
 
 DrawableMap random_DrawableMap(int, int, int, int);
 

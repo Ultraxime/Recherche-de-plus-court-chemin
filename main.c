@@ -21,13 +21,13 @@ int main(){
                                            SDL_HWSURFACE|SDL_DOUBLEBUF);//|SDL_FULLSCREEN);
     if ( !screen )
     {
-        printf("Unable to set 640x480 video: %s\n", SDL_GetError());
+        printf("Unable to set %dx%d video: %s\n", N, M, SDL_GetError());
         return INIT_ERROR;
     }
 
     SDL_WM_SetCaption("Recherche de plus court chemin", NULL);
 	
-	DrawableMap map = bruit_Perlin_DrawableMap(N,M);
+	DrawableMap map = bruit_Perlin_DrawableMap(N,M,screen);
 
 	Coordonnee begin;
 
