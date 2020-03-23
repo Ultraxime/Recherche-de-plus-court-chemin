@@ -13,4 +13,6 @@
 
 #define INIT_ERROR -6
 
+#define SWITCH_ERROR -7
+
 #endif

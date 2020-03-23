@@ -9,27 +9,27 @@
 #include "errors.h"
 #include "constantes.h"
 
-SimpleMap simpleMap_from_DrawableMap(DrawableMap origin, int n, int m){
+SimpleMap simpleMap_from_DrawableMap(DrawableMap origin){
 
 	SimpleMap map = NULL;
 
-	map = malloc(n*sizeof(bool*));
+	map = malloc(N*sizeof(bool*));
 
 	if(map == NULL){
 		printf("Cannot create the main table\n");
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0 ; i < n ; i++){
+	for(int i = 0 ; i < N ; i++){
 
-		map[i] = malloc(m*sizeof(bool));
+		map[i] = malloc(M*sizeof(bool));
 
 		if(map[i] == NULL){
 			printf("Cannot create table %d\n",i);
 			exit(MALLOC_ERROR);
 		}
 
-		for(int j = 0 ; j < m ; j++)
+		for(int j = 0 ; j < M ; j++)
 
 			map[i][j] = origin[i][j] > H;			//si l'altitude le permet cette case represente de la terre, de la mer sinon
 	}
@@ -98,16 +98,16 @@ DrawableMap random_DrawableMap(int n, int m, //Dimension de la carte a créer
 	return map;
 }
 
-DrawableMap bruit_Perlin_DrawableMap(int n, int m, SDL_Surface* screen){
+DrawableMap bruit_Perlin_DrawableMap(){
 
 	//On choisit comme largeur pour les cartes temporraire entre n ou n+1 comme celui dont le précedent a le plus de diviseurs premiers
 
-	List divN1 = facteurs_premiers(n-1);
-	List divN2 = facteurs_premiers(n);
+	List divN1 = facteurs_premiers(N-1);
+	List divN2 = facteurs_premiers(N);
 
 	List divN;
 
-	int largeur = 0;
+	int n = 0;
 	
 	if( len_List(divN1) > len_List(divN2) ){
 
@@ -115,7 +115,7 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m, SDL_Surface* screen){
 
 		divN = divN1;
 
-		largeur = n;
+		n = N;
 
 	}else{
 
@@ -123,17 +123,17 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m, SDL_Surface* screen){
 
 		divN = divN2;
 
-		largeur = n+1;
+		n = N+1;
 	}
 
 	//On fait la même chose pour la longueur
 
-	List divM1 = facteurs_premiers(m-1);
-	List divM2 = facteurs_premiers(m);
+	List divM1 = facteurs_premiers(M-1);
+	List divM2 = facteurs_premiers(M);
 
 	List divM;
 
-	int longueur = 0;
+	int m = 0;
 
 	if( len_List(divM1) > len_List(divM2) ){
 
@@ -141,7 +141,7 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m, SDL_Surface* screen){
 
 		divM = divM1;
 
-		longueur = m;
+		m = M;
 
 	}else{
 
@@ -149,15 +149,15 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m, SDL_Surface* screen){
 
 		divM = divM2;
 
-		longueur = m + 1;
+		m = M+1;
 	}
 
 	//Creation de carte avec des gradiants de plus en plus fin
 
-	int pasN = largeur - 1;
-	int pasM = longueur - 1;
+	int pasN = n - 1;
+	int pasM = m - 1;
 
-	List maps = create_Element( random_DrawableMap(largeur, longueur, pasN, pasM) );			//Creation de la List qui contiendra les cartes à sommer
+	List maps = create_Element( random_DrawableMap(n, m, pasN, pasM) );			//Creation de la List qui contiendra les cartes à sommer
 
 	while(!is_empty_List(divN) && !is_empty_List(divM)){
 		
@@ -166,28 +166,28 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m, SDL_Surface* screen){
 		else
 			pasN /= int_of_void( pop_List( &divN ) );
 
-		maps = push_value_List( random_DrawableMap(largeur, longueur, pasN, pasM), maps);
+		maps = push_value_List( random_DrawableMap(n, m, pasN, pasM), maps);
 	}
 
 	while( !is_empty_List(divN) ){
 
 		pasN /= int_of_void( pop_List( &divN ) );
 
-		maps = push_value_List( random_DrawableMap(largeur, longueur, pasN, pasM), maps);	
+		maps = push_value_List( random_DrawableMap(n, m, pasN, pasM), maps);	
 	}
 
 	while( !is_empty_List(divM) ){
 
 		pasM /= int_of_void( pop_List( &divM ) );
 
-		maps = push_value_List( random_DrawableMap(largeur - 1, longueur - 1, pasN, pasM), maps);
+		maps = push_value_List( random_DrawableMap(n, m, pasN, pasM), maps);
 	}
 
 	DrawableMap tmpMap = drawableMap_of_void( pop_List( &maps ) );
 
 	LongMap longMap = NULL;
 
-	longMap = malloc(n*sizeof(long*));
+	longMap = malloc(N*sizeof(long*));
 
 	if(longMap == NULL){
 		printf("Cannot create main table\n");
@@ -196,71 +196,68 @@ DrawableMap bruit_Perlin_DrawableMap(int n, int m, SDL_Surface* screen){
 
 	unsigned long puissance = 1;
 
-	for(int i = 0; i < n; i++){
+	for(int i = 0; i < N; i++){
 
-		longMap[i] = malloc(m*sizeof(long));
+		longMap[i] = malloc(M*sizeof(long));
 
 		if(longMap[i] == NULL){
 			printf("Cannot create table %d\n", i);
 			exit(MALLOC_ERROR);
 		}
 
-		for(int j = 0; j < m; j++)
+		for(int j = 0; j < M; j++)
 
 			longMap[i][j] = puissance * (unsigned long) tmpMap[i][j];
 	}
 
 	puissance +=PUISSANCE;
 
-	draw_DrawableMap(tmpMap, n, m, screen, random_Coordonnee(n,m), random_Coordonnee(n,m));
-
-	clear_DrawableMap(tmpMap, largeur);
+	
+	clear_DrawableMap(tmpMap, n);
 
 	while( !is_empty_List(maps) ){
 	
 		tmpMap = drawableMap_of_void( pop_List( &maps ) );
 
-		for(int i = 0; i < n; i++)
+		for(int i = 0; i < N; i++)
 
-			for(int j = 0; j < m; j++)
+			for(int j = 0; j < M; j++)
 
 				longMap[i][j] += puissance * (unsigned long) tmpMap[i][j];
 
-		draw_DrawableMap(tmpMap, n, m, screen, random_Coordonnee(n,m), random_Coordonnee(n,m));
-
-		clear_DrawableMap(tmpMap, largeur);
+		clear_DrawableMap(tmpMap, n);
 
 		puissance += PUISSANCE;
 	}
 
-	unsigned long min = min_LongMap(longMap, n, m);
+	unsigned long min = min_LongMap(longMap, N, M);
 
-	unsigned long max = max_LongMap(longMap, n, m) - min;
+	unsigned long max = max_LongMap(longMap, N, M) - min;
 
 	DrawableMap map = NULL;
 
-	map = malloc(n*sizeof(char*));
+	map = malloc(N*sizeof(char*));
 
 	if(map == NULL){
 		printf("Cannot create the main table\n");
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0; i < n; i++){
+	for(int i = 0; i < N; i++){
 
-		map[i] = malloc(m*sizeof(char));
+		map[i] = malloc(M*sizeof(char));
 
 		if( map[i] == NULL ){
 			printf("Cannot create table %d\n", i);
 			exit(MALLOC_ERROR);
 		}
 
-		for(int j = 0; j < m; j++)
+		for(int j = 0; j < M; j++)
 
 			map[i][j] = (unsigned char) ( ( 255 * (longMap[i][j] - min)) / max );
 	}
 
-	clear_LongMap(longMap, n);
+	clear_LongMap(longMap, N);
 
 	return map;
 }
@@ -317,8 +314,6 @@ void draw_DrawableMap(DrawableMap map, int n, int m, SDL_Surface* screen, Coordo
     			pixels[j*n + i] = green;
 
     		}
-
-    		//pixels[j*n + i] = SDL_MapRGB(screen->format, map[i][j], map[i][j], map[i][j]);
     	}
     }
 
@@ -351,11 +346,11 @@ void draw_SimpleMap(SimpleMap map, int n, int m, SDL_Surface* screen, Coordonnee
 
     		if( map[i][j] ){
     			
-    			pixels[j*n + i] = blue;
+    			pixels[j*n + i] = green;
 
     		}else{
 
-    			pixels[j*n + i] = green;
+    			pixels[j*n + i] = blue;
 
     		}
     	}

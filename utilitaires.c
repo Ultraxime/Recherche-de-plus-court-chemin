@@ -26,8 +26,6 @@ bool init(){
 
 List facteurs_premiers(int n){
 
-	printf("%d\n",n);
-
 	if(n <= 1)
 		return create_List();
 

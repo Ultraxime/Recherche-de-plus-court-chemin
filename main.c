@@ -4,13 +4,12 @@
 #include "structures.h"
 #include "utilitaires_structures.h"
 #include "fonctions_cartes.h"
+#include "fonctions_genetiques.h"
 #include "errors.h"
 #include "utilitaires.h"
 #include "constantes.h"
 
 int main(){
-
-	printf("Starting up");
 
 	if(!init()){
 		printf("Error during initialization");
@@ -27,7 +26,7 @@ int main(){
 
     SDL_WM_SetCaption("Recherche de plus court chemin", NULL);
 	
-	DrawableMap map = bruit_Perlin_DrawableMap(N,M,screen);
+	DrawableMap map = bruit_Perlin_DrawableMap();
 
 	Coordonnee begin;
 
@@ -46,9 +45,13 @@ int main(){
 
 	draw_DrawableMap(map, N, M, screen, begin, end);
 
-	SimpleMap map2 = simpleMap_from_DrawableMap(map,N,M);
+	SimpleMap map2 = simpleMap_from_DrawableMap(map);
 
 	draw_SimpleMap(map2, N, M, screen, begin, end);
+
+	Population population = first_Population();
+
+	generation_simple(map2, begin, end, population);
 
 	return 0;
 }

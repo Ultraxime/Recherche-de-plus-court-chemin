@@ -5,9 +5,9 @@
 
 #include "structures.h"
 
-SimpleMap simpleMap_from_DrawableMap(DrawableMap, int, int);
+SimpleMap simpleMap_from_DrawableMap(DrawableMap);
 
-DrawableMap bruit_Perlin_DrawableMap(int, int,SDL_Surface*);
+DrawableMap bruit_Perlin_DrawableMap();
 
 DrawableMap random_DrawableMap(int, int, int, int);
 

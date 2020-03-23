@@ -22,6 +22,8 @@ Population first_Population(){
 
 	for(int i = 0; i < NB; i++)
 		population[i] = random_Individu();
+
+	return population;
 }
 
 Population evolution(Population original, int* rank){
@@ -49,6 +51,8 @@ Population evolution(Population original, int* rank){
 		population[i] = wedding(population[rand() % kept], population[rand() % kept]);
 
 	mutation(population);
+
+	free(original);
 
 	return population;
 }
@@ -119,24 +123,36 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 		exit(MALLOC_ERROR);
 	}
 
-	List* chemins;
+	//Initialisation des variables
 
-	chemins = malloc(NB * sizeof(List));
-	
-	if(chemins == NULL){
-		printf("Cannot create chemin table");
-		exit(MALLOC_ERROR);
-	}
+	Couple couple = life_simple(map, begin, end, population[0]);
 
-	for(int i = 0; i < NB; i++){
-		Couple couple = life_simple(map, begin, end, population[i]);
+	scores[0] = int_of_void(couple.key);
+	int min = scores[0];
+
+	List chemin = list_of_void(couple.value);
+
+	for(int i = 1; i < NB; i++){
+
+		if(i%10==0)printf("%d\n", i);
+
+		couple = life_simple(map, begin, end, population[i]);
 
 		scores[i] = int_of_void(couple.key);
 
-		chemins[i] = list_of_void(couple.value);
+		if(scores[i] < min){
+			printf("%d < %d\n", scores[i], min);
+
+			min = scores[i];
+			clear_List(chemin);
+			chemin = list_of_void(couple.value);
+		}else{
+			printf("%d < %d\n", scores[i], min);
+			clear_List(list_of_void(couple.value));
+		}
 	}
 
-	return create_Couple(scores, chemins);
+	return create_Couple(scores, chemin);
 }
 
 Couple life_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Individu individu){
@@ -162,5 +178,208 @@ Couple life_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Individu ind
 
 Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu individu){
 
+	unsigned int x = currentPosition.x;				//Simplification des notations pour alleger le code
+	unsigned int y = currentPosition.y;
+
+	unsigned char resultat = rand() % 255;			//Resultat aléatoire que l'on va utiliser pour nos choix de direction
+
+	Coordonnee arrivee = currentPosition;
+
+	while(is_equal_Coordonnee(arrivee, currentPosition)){		//On avance que si on a bougé
+		if( resultat < individu.forward ){				//On avance
+
+			switch( individu.direction ){
+
+				case 0:							//On pointe vers le nord
+					if( y > 0 && !map[x][y-1] ){
+
+						arrivee = create_Coordonnee(x, y-1);
+
+					}
+					break;
+
+				case 1:							//On pointe vers l'est
+					if( x < N-1 && !map[x+1][y] ){
+
+						arrivee = create_Coordonnee(x+1, y);
+
+					}
+					break;
+
+				case 2:							//On pointe vers le sud
+					if( y < M-1 && !map[x][y+1] ){
+
+						arrivee = create_Coordonnee(x, y+1);
+
+					}
+					break;
+
+				case 3:							//On pointe vers l'ouest
+					if( x > 0 && !map[x-1][y] ){
+
+						arrivee = create_Coordonnee(x-1, y);
+
+					}
+					break;
+
+				default:
+					exit(SWITCH_ERROR);
+					break;
+			}
+		}else{
+
+			resultat -= individu.forward;			//Pour reduire le nombre de calcul a venir
+
+			if( resultat < individu.right ){		//On va a droite
+
+				switch( individu.direction ){
+					case 0:							//On pointe vers le nord
+						if( x < N-1 && !map[x+1][y] ){
+
+							arrivee = create_Coordonnee(x+1, y);
+
+							individu.direction = 1;			//on pointe desormais vers l'est
+
+						}
+						break;
+
+					case 1:							//On pointe vers l'est
+						if( y < M-1 && !map[x][y+1] ){
+
+							arrivee = create_Coordonnee(x, y+1);
+
+							individu.direction = 2; 			//On pointe desormais le sud
+
+						}
+						break;
+
+					case 2:							//On pointe vers le sud
+						if( x > 0 && !map[x-1][y] ){
+
+							arrivee = create_Coordonnee(x-1, y);
+
+							individu.direction = 3;			//On pointe desormais l'ouest
+
+						}
+						break;
+
+					case 3:							//On pointe vers l'ouest
+						if( y > 0 && !map[x][y-1] ){
+
+							arrivee = create_Coordonnee(x, y-1);
+
+							individu.direction = 0;			//On pointe desormais le nord
+
+						}
+						break;
+
+					default:
+						exit(SWITCH_ERROR);
+						break;
+				}
+
+			}else{
+
+				if( resultat < individu.right + individu.backward ){	//On recule
+
+					switch( individu.direction ){
+						case 0:							//On pointe vers le nord
+							if( y < M-1 && !map[x][y+1] ){
+
+								arrivee = create_Coordonnee(x, y+1);
+
+								individu.direction = 2;			//on pointe desormais vers le sud
+
+							}
+							break;
+
+						case 1:							//On pointe vers l'est
+							if( x > 0 && !map[x-1][y] ){
+
+								arrivee = create_Coordonnee(x-1, y);
+
+								individu.direction = 3; 			//On pointe desormais l'ouest'
+
+							}
+							break;
+
+						case 2:							//On pointe vers le sud
+							if( y > 0 && !map[x][y-1] ){
+
+								arrivee = create_Coordonnee(x, y-1);
+
+								individu.direction = 0;			//On pointe desormais le nord
+
+							}
+							break;
+
+						case 3:							//On pointe vers l'ouest
+							if( x < N-1 && !map[x+1][y] ){
+
+								arrivee = create_Coordonnee(x+1, y);
+
+								individu.direction = 1;			//On pointe desormais l'est
+
+							}
+							break;
+
+						default:
+							exit(SWITCH_ERROR);
+							break;
+					}
+
+				}else{						//On va a gauche
+
+					switch( individu.direction ){
+						case 0:							//On pointe vers le nord
+							if( x > 0 && !map[x-1][y] ){
+
+								arrivee = create_Coordonnee(x-1, y);
+
+								individu.direction = 3;			//on pointe desormais vers l'ouest
+
+							}
+							break;
+
+						case 1:							//On pointe vers l'est
+							if( y > 0 && !map[x][y-1] ){
+
+								arrivee = create_Coordonnee(x, y-1);
+
+								individu.direction = 0; 			//On pointe desormais le nord
+
+							}
+							break;
+
+						case 2:							//On pointe vers le sud
+							if( x < N-1 && !map[x+1][y] ){
+
+								arrivee = create_Coordonnee(x+1, y);
+
+								individu.direction = 1;			//On pointe desormais l'est
+
+							}
+							break;
+
+						case 3:							//On pointe vers l'ouest
+							if( y < M-1 && !map[x][y+1] ){
+
+								arrivee = create_Coordonnee(x, y+1);
+
+								individu.direction = 2;			//On pointe desormais le sud
+
+							}
+							break;
+
+						default:
+							exit(SWITCH_ERROR);
+							break;
+					}
+				}
+
+
+			}
+		}
+	}
 	return currentPosition;
 }
