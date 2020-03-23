@@ -329,3 +329,42 @@ void draw_DrawableMap(DrawableMap map, int n, int m, SDL_Surface* screen, Coordo
     pause();
 
 }
+
+
+void draw_SimpleMap(SimpleMap map, int n, int m, SDL_Surface* screen, Coordonnee begin, Coordonnee end){
+
+	if(SDL_LockSurface(screen) < 0 ){
+        printf("Unable to lock screen : %s\n", SDL_GetError());
+        exit(LOCK_SURFACE_ERROR);
+    }
+
+    Uint32 *pixels;
+    pixels = screen->pixels;
+
+    Uint32 blue = SDL_MapRGB(screen->format, 160, 203, 237);
+    
+    Uint32 green = SDL_MapRGB(screen->format, 167, 210, 101);
+    
+    for(int i = 0; i < n; i++){
+
+    	for(int j = 0; j < m; j++){
+
+    		if( map[i][j] ){
+    			
+    			pixels[j*n + i] = blue;
+
+    		}else{
+
+    			pixels[j*n + i] = green;
+
+    		}
+    	}
+    }
+
+    SDL_UnlockSurface(screen);
+
+    SDL_Flip(screen);
+
+    pause();
+
+}

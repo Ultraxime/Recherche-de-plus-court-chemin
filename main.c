@@ -17,7 +17,7 @@ int main(){
 		return INIT_ERROR;
 	}
 
-	SDL_Surface* screen = SDL_SetVideoMode(N ,M , 16,
+	SDL_Surface* screen = SDL_SetVideoMode(N ,M , 32,
                                            SDL_HWSURFACE|SDL_DOUBLEBUF);//|SDL_FULLSCREEN);
     if ( !screen )
     {
@@ -45,6 +45,10 @@ int main(){
 
 
 	draw_DrawableMap(map, N, M, screen, begin, end);
+
+	SimpleMap map2 = simpleMap_from_DrawableMap(map,N,M);
+
+	draw_SimpleMap(map2, N, M, screen, begin, end);
 
 	return 0;
 }
