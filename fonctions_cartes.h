@@ -11,8 +11,12 @@ DrawableMap bruit_Perlin_DrawableMap();
 
 DrawableMap random_DrawableMap(int, int, int, int);
 
-void draw_DrawableMap(DrawableMap, int, int, SDL_Surface*, Coordonnee, Coordonnee);
+void draw_DrawableMap(DrawableMap, SDL_Surface*, Coordonnee, Coordonnee);
 
-void draw_SimpleMap(SimpleMap, int, int, SDL_Surface*, Coordonnee, Coordonnee);
+void draw_SimpleMap(SimpleMap, SDL_Surface*, Coordonnee, Coordonnee);
+
+void draw_way(List, SDL_Surface*);
+
+void draw_coordonnee(Coordonnee, Uint32*, Uint32);
 
 #endif

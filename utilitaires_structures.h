@@ -71,7 +71,7 @@ Coordonnee random_Coordonnee(unsigned int, unsigned int);
 
 bool is_equal_Coordonnee(Coordonnee, Coordonnee);
 
-Coordonnee cordonnee_of_void(void*);
+Coordonnee coordonnee_of_void(void*);
 
 void* void_of_Coordonnee(Coordonnee);
 

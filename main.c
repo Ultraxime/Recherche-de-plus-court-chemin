@@ -17,7 +17,7 @@ int main(){
 	}
 
 	SDL_Surface* screen = SDL_SetVideoMode(N ,M , 32,
-                                           SDL_HWSURFACE|SDL_DOUBLEBUF);//|SDL_FULLSCREEN);
+                                           SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
     if ( !screen )
     {
         printf("Unable to set %dx%d video: %s\n", N, M, SDL_GetError());
@@ -39,19 +39,19 @@ int main(){
 
 	end = random_Coordonnee(N, M);
 
-	while( map[end.x][end.y] >=H && is_equal_Coordonnee(begin, end))	//On ne peut finir sur terre et avoir un debut egal a une fin n'a pas d'interet
+	while( map[end.x][end.y] >=H || is_equal_Coordonnee(begin, end))	//On ne peut finir sur terre et avoir un debut egal a une fin n'a pas d'interet
 		end = random_Coordonnee(N, M);
 
 
-	draw_DrawableMap(map, N, M, screen, begin, end);
+	draw_DrawableMap(map, screen, begin, end);
 
 	SimpleMap map2 = simpleMap_from_DrawableMap(map);
 
-	draw_SimpleMap(map2, N, M, screen, begin, end);
+	draw_SimpleMap(map2, screen, begin, end);
 
-	Population population = first_Population();
+	pause();
 
-	generation_simple(map2, begin, end, population);
+	Couple genetique = resultat_genetique_simple(map2, begin, end, screen);
 
 	return 0;
 }

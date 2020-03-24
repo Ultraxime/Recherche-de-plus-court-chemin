@@ -262,7 +262,7 @@ DrawableMap bruit_Perlin_DrawableMap(){
 	return map;
 }
 
-void draw_DrawableMap(DrawableMap map, int n, int m, SDL_Surface* screen, Coordonnee begin, Coordonnee end){
+void draw_DrawableMap(DrawableMap map, SDL_Surface* screen, Coordonnee begin, Coordonnee end){
 
 	if(SDL_LockSurface(screen) < 0 ){
         printf("Unable to lock screen : %s\n", SDL_GetError());
@@ -281,41 +281,49 @@ void draw_DrawableMap(DrawableMap map, int n, int m, SDL_Surface* screen, Coordo
     Uint32 orange = SDL_MapRGB(screen->format, 251, 207, 112);
     Uint32 brown = SDL_MapRGB(screen->format, 243, 159, 20);
 
-    for(int i = 0; i < n; i++){
+    for(int i = 0; i < N; i++){
 
-    	for(int j = 0; j < m; j++){
+    	for(int j = 0; j < M; j++){
 
     		if(map[i][j] < H / 4){
     			
-    			pixels[j*n + i] = darkBlue;
+    			pixels[j*N + i] = darkBlue;
     		
     		}else if(map[i][j] < (3 * (unsigned int) H ) / 4){
 
-    			pixels[j*n + i] = blue;
+    			pixels[j*N + i] = blue;
 
     		}else if(map[i][j] < H){
 
-    			pixels[j*n + i] = lightBlue;
+    			pixels[j*N + i] = lightBlue;
 
     		}else if(map[i][j] > 255 - (255 - H) / 8){
 
-    			pixels[j*n + i] = brown;
+    			pixels[j*N + i] = brown;
     			
     		}else if(map[i][j] > 255 - (255 - H) / 2){
 
-    			pixels[j*n + i] = orange;
+    			pixels[j*N + i] = orange;
     			
     		}else if(map[i][j] > 255 - (3 * (unsigned int) (255 - H) ) / 4){
 
-    			pixels[j*n + i] = lightOrange;
+    			pixels[j*N + i] = lightOrange;
     			
     		}else{
 
-    			pixels[j*n + i] = green;
+    			pixels[j*N + i] = green;
 
     		}
     	}
     }
+
+    Uint32 begin_color = SDL_MapRGB(screen->format, 255, 255, 0);
+
+    draw_coordonnee(begin, pixels, begin_color);
+
+    Uint32 end_color = SDL_MapRGB(screen->format, 0, 0, 0);
+
+    draw_coordonnee(end, pixels, end_color);
 
     SDL_UnlockSurface(screen);
 
@@ -326,7 +334,7 @@ void draw_DrawableMap(DrawableMap map, int n, int m, SDL_Surface* screen, Coordo
 }
 
 
-void draw_SimpleMap(SimpleMap map, int n, int m, SDL_Surface* screen, Coordonnee begin, Coordonnee end){
+void draw_SimpleMap(SimpleMap map, SDL_Surface* screen, Coordonnee begin, Coordonnee end){
 
 	if(SDL_LockSurface(screen) < 0 ){
         printf("Unable to lock screen : %s\n", SDL_GetError());
@@ -340,26 +348,70 @@ void draw_SimpleMap(SimpleMap map, int n, int m, SDL_Surface* screen, Coordonnee
     
     Uint32 green = SDL_MapRGB(screen->format, 167, 210, 101);
     
-    for(int i = 0; i < n; i++){
+    for(int i = 0; i < N; i++){
 
-    	for(int j = 0; j < m; j++){
+    	for(int j = 0; j < M; j++){
 
     		if( map[i][j] ){
     			
-    			pixels[j*n + i] = green;
+    			pixels[j*N + i] = green;
 
     		}else{
 
-    			pixels[j*n + i] = blue;
+    			pixels[j*N + i] = blue;
 
     		}
     	}
     }
 
+    Uint32 begin_color = SDL_MapRGB(screen->format, 255, 255, 0);
+
+    draw_coordonnee(begin, pixels, begin_color);
+
+    Uint32 end_color = SDL_MapRGB(screen->format, 0, 0, 0);
+
+    draw_coordonnee(end, pixels, end_color);
+
     SDL_UnlockSurface(screen);
 
     SDL_Flip(screen);
 
-    pause();
+}
 
+void draw_way(List way, SDL_Surface* screen){
+
+	if(SDL_LockSurface(screen) < 0 ){
+        printf("Unable to lock screen : %s\n", SDL_GetError());
+        exit(LOCK_SURFACE_ERROR);
+    }
+
+    Coordonnee coordonnee;
+
+	Uint32 *pixels;
+    pixels = screen->pixels;
+
+    Uint32 color = SDL_MapRGB(screen->format, 255, 0, 0);
+
+	while(!is_empty_List(way)){
+		coordonnee = coordonnee_of_void(pop_List(&way));
+		draw_coordonnee(coordonnee, pixels, color);
+	}
+
+	SDL_UnlockSurface(screen);
+
+    SDL_Flip(screen);
+
+}
+
+void draw_coordonnee(Coordonnee coordonnee, Uint32* pixels, Uint32 color){
+
+	pixels[coordonnee.x + coordonnee.y*N] = color;
+	pixels[coordonnee.x+1 + coordonnee.y*N] = color;
+	pixels[coordonnee.x-1 + coordonnee.y*N] = color;
+	pixels[coordonnee.x + coordonnee.y*N+N] = color;
+	pixels[coordonnee.x+1 + coordonnee.y*N+N] = color;
+	pixels[coordonnee.x-1 + coordonnee.y*N+N] = color;
+	pixels[coordonnee.x + coordonnee.y*N-N] = color;
+	pixels[coordonnee.x+1 + coordonnee.y*N-N] = color;
+	pixels[coordonnee.x-1 + coordonnee.y*N-N] = color;
 }

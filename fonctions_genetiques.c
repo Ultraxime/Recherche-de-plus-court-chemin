@@ -2,25 +2,26 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "structures.h"
 #include "fonctions_genetiques.h" 
 #include "utilitaires_structures.h"
 #include "errors.h"
 #include "constantes.h"
+#include "utilitaires.h"
+#include "fonctions_cartes.h"
 
 
 Population first_Population(){
 
 	Population population;
 
-	population = malloc(NB * sizeof(Individu));
+	population = malloc(TAILLE * sizeof(Individu));
 
 	if(population == NULL){
 		printf("Cannot create the first population");
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0; i < NB; i++)
+	for(int i = 0; i < TAILLE; i++)
 		population[i] = random_Individu();
 
 	return population;
@@ -30,16 +31,16 @@ Population evolution(Population original, int* rank){
 
 	int kept = 0;
 
-	Population population = malloc(NB * sizeof(Individu));
+	Population population = malloc(TAILLE * sizeof(Individu));
 
 	if(population == NULL){
 		printf("Cannot create the new population");
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0; i < NB; i++){
+	for(int i = 0; i < TAILLE; i++){
 
-		if(rand() % NB <= NB * exp(-i)){
+		if(rand() % TAILLE <= TAILLE * exp(-i)){
 
 			population[kept] = original[i];
 
@@ -47,7 +48,7 @@ Population evolution(Population original, int* rank){
 		}
 	}
 
-	for( int i = kept; i < NB; i++)
+	for( int i = kept; i < TAILLE; i++)
 		population[i] = wedding(population[rand() % kept], population[rand() % kept]);
 
 	mutation(population);
@@ -68,7 +69,7 @@ Individu wedding(Individu pere, Individu mere){
 
 void mutation(Population population){
 
-	for(int i = 0; i < NB; i++){
+	for(int i = 0; i < TAILLE; i++){
 		switch(rand() % MUTATION){
 			case 0:
 				population[i] = create_Individu(rand() % 255,
@@ -116,23 +117,20 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 
 	unsigned int* scores;
 
-	scores = malloc(NB * sizeof(int));
+	scores = malloc(TAILLE * sizeof(int));
 
 	if(scores == NULL){
 		printf("Cannot create scores table");
 		exit(MALLOC_ERROR);
 	}
 
-	//Initialisation des variables
+	Couple couple;
 
-	Couple couple = life_simple(map, begin, end, population[0]);
-
-	scores[0] = int_of_void(couple.key);
-	int min = scores[0];
+	int min = LIMITE;
 
 	List chemin = list_of_void(couple.value);
 
-	for(int i = 1; i < NB; i++){
+	for(int i = 0; i < TAILLE; i++){
 
 		if(i%10==0)printf("%d\n", i);
 
@@ -147,7 +145,7 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 			clear_List(chemin);
 			chemin = list_of_void(couple.value);
 		}else{
-			printf("%d < %d\n", scores[i], min);
+			printf("%d >= %d\n", scores[i], min);
 			clear_List(list_of_void(couple.value));
 		}
 	}
@@ -382,4 +380,44 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 		}
 	}
 	return currentPosition;
+}
+
+
+Couple resultat_genetique_simple(SimpleMap map, Coordonnee begin, Coordonnee end, SDL_Surface* screen){
+
+	Population population = first_Population();
+
+	List chemin;
+
+	int min = LIMITE;
+
+	for(int i = 0; i < NB_GENERATION; i++){
+		Couple couple = generation_simple(map, begin, end, population);
+
+		int* resultats = couple.key;
+
+		int* rank = sort(resultats, TAILLE, TAILLE);
+
+		if(resultats[rank[0]] < min){
+			min = resultats[rank[0]];
+
+			clear_List(chemin);
+			chemin = couple.value;
+
+			draw_SimpleMap(map, screen, begin, end);
+			draw_way(chemin, screen);
+		}else{
+			clear_List(couple.value);
+		}
+
+		population = evolution(population, rank);
+
+		free(couple.key);
+
+		free(rank);
+
+	}
+
+	return	create_Couple(chemin, void_of_int(min))	;
+
 }

@@ -11,8 +11,10 @@
 
 #define MUTATION 100000	//Probabilite de mutation
 
-#define NB 1000			//Taille d'une population
+#define TAILLE 1000			//Taille d'une population
 
 #define LIMITE 10*N*M 		//Longueur max d'un chemin
+
+#define NB_GENERATION 100	//Nombre de générations
 
 #endif
