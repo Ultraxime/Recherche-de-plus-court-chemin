@@ -97,6 +97,12 @@ Couple create_Couple(void*, void*);
 
 
 
+//Operations sur les Graph
+
+Graph create_Graph(unsigned int);
+
+
+
 //Operations sur les int
 
 int int_of_void(void*);

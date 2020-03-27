@@ -54,4 +54,11 @@ struct Couple{
 	void* value;
 };
 
+typedef struct Graph Graph;
+
+struct Graph{
+	unsigned int n;
+	List* arretes;
+};
+
 #endif

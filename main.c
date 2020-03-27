@@ -17,7 +17,7 @@ int main(){
 	}
 
 	SDL_Surface* screen = SDL_SetVideoMode(N ,M , 32,
-                                           SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_FULLSCREEN);
+                                           SDL_HWSURFACE|SDL_DOUBLEBUF);//|SDL_FULLSCREEN);
     if ( !screen )
     {
         printf("Unable to set %dx%d video: %s\n", N, M, SDL_GetError());

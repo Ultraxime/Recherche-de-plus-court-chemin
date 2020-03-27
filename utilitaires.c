@@ -64,6 +64,8 @@ int* sort(int* value, unsigned int n, unsigned int i){
 
 	int* classement;
 
+	if( i >= n ) return sort(value,n,i-1);
+
 	if( i <= 0){
 		
 		classement = malloc(n * sizeof(int));
@@ -82,7 +84,7 @@ int* sort(int* value, unsigned int n, unsigned int i){
 
 	unsigned int j = 0;
 
-	while( value[classement[j]] < value[i] && j < i )
+	while( value[classement[j]] <= value[i] && j < i )
 		j++;
 
 	int tmp = i;

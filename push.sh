@@ -6,7 +6,7 @@ case $1 in
 	;;
 
 	*)
-	  git add *
+	  git add *.c *.h *.md
 	  git commit .
 	  git push git@github.com:Ultraxime/Tipe-SDL.git master
 	;;

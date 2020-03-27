@@ -116,12 +116,22 @@ int len_List(List list){
 
 void clear_List(List list){
 
-	if(list == NULL)
+	/*if(list == NULL)
 		return;
 
 	else{
 		clear_List( list->next );
 		free(list);
+	}*/
+
+	//J'ai été obligé ici de passer sur une ecriture non récursive car j'utilise des List trop grande pour la pile
+
+	while(list != NULL){
+		List next = list->next;
+
+		free(list);
+
+		list = next;
 	}
 }
 
@@ -297,6 +307,29 @@ Couple create_Couple(void* key, void* value){
 	couple.value = value;
 
 	return couple;
+}
+
+
+
+//Operations sur les Graph
+
+Graph create_Graph(unsigned int n){
+
+	Graph graph;
+
+	graph.n = n;
+
+	graph.arretes = malloc(n * sizeof(List));
+
+	if(graph.arretes == NULL){
+		printf("Cannot create the graph");
+		exit(MALLOC_ERROR);
+	}
+
+	for(int i = 0; i < n; i++)
+		graph.arretes[i] = create_List();
+
+	return graph;
 }
 
 
