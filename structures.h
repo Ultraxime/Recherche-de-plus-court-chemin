@@ -61,4 +61,11 @@ struct Graph{
 	List* arretes;
 };
 
+typedef struct Queue Queue;
+
+struct Queue{
+	List exit;
+	Element* entrance;	
+};
+
 #endif

@@ -101,6 +101,20 @@ Couple create_Couple(void*, void*);
 
 Graph create_Graph(unsigned int);
 
+void add_arrete(Graph*, unsigned int, unsigned int);
+
+
+
+//Operations sur les Queue
+
+Queue create_Queue();
+
+void push_Queue(Queue*, void*);
+
+void pop_Queue(Queue*);
+
+bool is_empty_Queue(Queue);
+
 
 
 //Operations sur les int

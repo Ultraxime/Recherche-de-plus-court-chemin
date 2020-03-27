@@ -332,6 +332,48 @@ Graph create_Graph(unsigned int n){
 	return graph;
 }
 
+void add_arrete(Graph* graph, unsigned int i, unsigned int j){
+
+	graph->arretes[i] = push_value_List(void_of_int(j), graph->arretes[i]);
+}
+
+
+//Operations sur les Queue
+
+Queue create_Queue(){
+	Queue queue;
+
+	queue.exit = NULL;
+	queue.entrance = NULL;
+
+	return queue;
+}
+
+void push_Queue(Queue* queue, void* value){
+
+	Element* new = create_Element(value);
+
+	if(queue->exit == NULL){
+		
+		queue->exit == new;
+		queue->entrance == new;
+		
+		return;
+
+	}else{
+
+		queue->entrance->next = new;
+		queue->entrance = new;
+
+		return;
+
+	}
+}
+
+void pop_Queue(Queue*);
+
+bool is_empty_Queue(Queue);
+
 
 
 //Operations sur les int
