@@ -370,9 +370,31 @@ void push_Queue(Queue* queue, void* value){
 	}
 }
 
-void pop_Queue(Queue*);
+void* pop_Queue(Queue* queue){
 
-bool is_empty_Queue(Queue);
+	if(queue->exit == NULL){
+		printf("Unable to pop an empty queue\n");
+		exit(EMPTY_ERROR);
+	}
+
+	Element* exit = queue->exit;
+
+	queue->exit = exit->next;
+
+	if(exit->next == NULL)
+		queue->entrance = NULL;
+
+	void* result = exit->value;
+
+	free(exit);
+
+	return result;
+}
+
+bool is_empty_Queue(Queue queue){
+
+	return queue.exit == NULL;
+}
 
 
 

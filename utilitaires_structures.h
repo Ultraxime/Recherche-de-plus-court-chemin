@@ -111,7 +111,7 @@ Queue create_Queue();
 
 void push_Queue(Queue*, void*);
 
-void pop_Queue(Queue*);
+void* pop_Queue(Queue*);
 
 bool is_empty_Queue(Queue);
 

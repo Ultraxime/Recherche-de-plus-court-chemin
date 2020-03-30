@@ -60,7 +60,7 @@ void pause(){
 	}
 }
 
-int* sort(int* value, unsigned int n, unsigned int i){
+int* sort(int* value, int n, int i){
 
 	int* classement;
 
@@ -82,7 +82,7 @@ int* sort(int* value, unsigned int n, unsigned int i){
 
 	classement = sort(value, n, i-1);
 
-	unsigned int j = 0;
+	int j = 0;
 
 	while( value[classement[j]] <= value[i] && j < i )
 		j++;
