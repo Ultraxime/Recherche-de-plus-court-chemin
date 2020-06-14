@@ -1,0 +1,6 @@
+CC = gcc
+
+CFLAGS = 
+LIBFLAGS = 
+
+
