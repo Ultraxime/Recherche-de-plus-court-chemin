@@ -129,10 +129,12 @@ void clear_List(List list){
 	while(list != NULL){
 		List next = list->next;
 
+
 		free(list);
 
 		list = next;
 	}
+
 }
 
 bool is_empty_List(List list){

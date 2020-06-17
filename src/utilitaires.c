@@ -84,7 +84,7 @@ int* sort(int* value, int n, int i){
 
 	int j = 0;
 
-	while( value[classement[j]] <= value[i] && j < i )
+	while( j < i && value[classement[j]] <= value[i] )
 		j++;
 
 	int tmp = i;

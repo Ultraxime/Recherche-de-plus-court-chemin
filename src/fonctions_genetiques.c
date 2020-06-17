@@ -128,7 +128,7 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 
 	int min = LIMITE;
 
-	List chemin = list_of_void(couple.value);
+	List chemin = create_List();
 
 	for(int i = 0; i < TAILLE; i++){
 
@@ -398,12 +398,12 @@ Couple resultat_genetique_simple(SimpleMap map, Coordonnee begin, Coordonnee end
 			min = resultats[rank[0]];
 
 			clear_List(chemin);
-			chemin = couple.value;
+			chemin = list_of_void(couple.value);
 
 			draw_SimpleMap(map, screen, begin, end);
 			draw_way(chemin, screen);
 		}else{
-			clear_List(couple.value);
+			clear_List(list_of_void(couple.value));
 		}
 
 		population = evolution(population, rank);
