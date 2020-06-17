@@ -1,5 +1,11 @@
-# Tipe-SDL
-Un TIPE qui en plus d'etre efficace est joli
+# Recherche de plus court chemin
+Ce Projet entièrement rédigé en C est toujours en cours de développement.
+Il vise à écrire un algorithme de recherche de plus court chemin en implémentant un algorithme génétique.
+Dans cette finalité, il contient (ou contiendra):
+* Un deux algorithme génétique, actuellement il ne prend en compte que les distances, mais devrait etre capable ulterieurement de prendre d'autre facteurs en compte tels que le vent, les courant ou le dénivelé
+* Un algorithme basé sur le bruit de Perlin pour la création de carte aléatoire afin de vérifier le bon fonctionnement de l'argorithme génétique
+* Un algorithme de transformation de carte en graphe (sous la forme d'un tableau de liste de voisin)
+* Un algorithme de parcours en largeur et une implementation de l'algorithme de Dijkstra, qui servent a validé les resultats obtenu par l'algorithme génétique et prouver sa convergence
 
 ### Compilation
 ```shell
