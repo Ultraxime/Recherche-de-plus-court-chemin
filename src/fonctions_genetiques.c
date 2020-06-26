@@ -124,24 +124,20 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 		exit(MALLOC_ERROR);
 	}
 
-	Couple couple;
-
-	int min = LIMITE;
+	int min = LIMITE + 1;							//+1 allows us to be sure to have a way to draw at the end, even if it's a bad one
 
 	List chemin = create_List();
 
 	for(int i = 0; i < TAILLE; i++){
 
-		if(i%10==0)printf("%d\n", i);
+		//if(i%10==0)printf("%d  ", i);				//Useless at the moment but will be used to determine if parralellisation is efficiente
 
-		couple = life_simple(map, begin, end, population[i]);
+		Couple couple = life_simple(map, begin, end, population[i]);
 
 		scores[i] = int_of_void(couple.key);
 
 		if(scores[i] < min){
 			min = scores[i];
-
-			printf("%d\n", min);
 
 			clear_List(chemin);
 			chemin = list_of_void(couple.value);
@@ -179,93 +175,46 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 	unsigned int x = currentPosition.x;				//Simplification des notations pour alleger le code
 	unsigned int y = currentPosition.y;
 
-	unsigned char resultat = rand() % 255;			//Resultat aléatoire que l'on va utiliser pour nos choix de direction
+	
 
 	Coordonnee arrivee = currentPosition;
 
-	if( resultat < individu.forward ){				//On avance
+	while(is_equal_Coordonnee(arrivee, currentPosition)){	//Run this code until we finally go forward
 
-		switch( individu.direction ){
+		unsigned char resultat = rand() % 255;			//Resultat aléatoire que l'on va utiliser pour nos choix de direction
 
-			case 0:							//On pointe vers le nord
-				if( y > 0 && !map[x][y-1] ){
-
-					arrivee = create_Coordonnee(x, y-1);
-
-				}
-				break;
-
-			case 1:							//On pointe vers l'est
-				if( x < N-1 && !map[x+1][y] ){
-
-					arrivee = create_Coordonnee(x+1, y);
-
-				}
-				break;
-
-			case 2:							//On pointe vers le sud
-				if( y < M-1 && !map[x][y+1] ){
-
-					arrivee = create_Coordonnee(x, y+1);
-
-				}
-				break;
-
-			case 3:							//On pointe vers l'ouest
-				if( x > 0 && !map[x-1][y] ){
-
-					arrivee = create_Coordonnee(x-1, y);
-
-				}
-				break;
-
-			default:
-				exit(SWITCH_ERROR);
-				break;
-		}
-	}else{
-
-		resultat -= individu.forward;			//Pour reduire le nombre de calcul a venir
-
-		if( resultat < individu.right ){		//On va a droite
+		if( resultat < individu.forward ){				//On avance
 
 			switch( individu.direction ){
+
 				case 0:							//On pointe vers le nord
-					if( x < N-1 && !map[x+1][y] ){
+					if( y > 0 && !map[x][y-1] ){
 
-						arrivee = create_Coordonnee(x+1, y);
-
-						individu.direction = 1;			//on pointe desormais vers l'est
+						arrivee = create_Coordonnee(x, y-1);
 
 					}
 					break;
 
 				case 1:							//On pointe vers l'est
-					if( y < M-1 && !map[x][y+1] ){
+					if( x < N-1 && !map[x+1][y] ){
 
-						arrivee = create_Coordonnee(x, y+1);
-
-						individu.direction = 2; 			//On pointe desormais le sud
+						arrivee = create_Coordonnee(x+1, y);
 
 					}
 					break;
 
 				case 2:							//On pointe vers le sud
-					if( x > 0 && !map[x-1][y] ){
+					if( y < M-1 && !map[x][y+1] ){
 
-						arrivee = create_Coordonnee(x-1, y);
-
-						individu.direction = 3;			//On pointe desormais l'ouest
+						arrivee = create_Coordonnee(x, y+1);
 
 					}
 					break;
 
 				case 3:							//On pointe vers l'ouest
-					if( y > 0 && !map[x][y-1] ){
+					if( x > 0 && !map[x-1][y] ){
 
-						arrivee = create_Coordonnee(x, y-1);
-
-						individu.direction = 0;			//On pointe desormais le nord
+						arrivee = create_Coordonnee(x-1, y);
 
 					}
 					break;
@@ -274,33 +223,44 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 					exit(SWITCH_ERROR);
 					break;
 			}
-
 		}else{
 
-			if( resultat < individu.right + individu.backward ){	//On recule
+			resultat -= individu.forward;			//Pour reduire le nombre de calcul a venir
+
+			if( resultat < individu.right ){		//On va a droite
 
 				switch( individu.direction ){
 					case 0:							//On pointe vers le nord
-						if( y < M-1 && !map[x][y+1] ){
+						if( x < N-1 && !map[x+1][y] ){
 
-							arrivee = create_Coordonnee(x, y+1);
+							arrivee = create_Coordonnee(x+1, y);
 
-							individu.direction = 2;			//on pointe desormais vers le sud
+							individu.direction = 1;			//on pointe desormais vers l'est
 
 						}
 						break;
 
 					case 1:							//On pointe vers l'est
-						if( x > 0 && !map[x-1][y] ){
+						if( y < M-1 && !map[x][y+1] ){
 
-							arrivee = create_Coordonnee(x-1, y);
+							arrivee = create_Coordonnee(x, y+1);
 
-							individu.direction = 3; 			//On pointe desormais l'ouest'
+							individu.direction = 2; 			//On pointe desormais le sud
 
 						}
 						break;
 
 					case 2:							//On pointe vers le sud
+						if( x > 0 && !map[x-1][y] ){
+
+							arrivee = create_Coordonnee(x-1, y);
+
+							individu.direction = 3;			//On pointe desormais l'ouest
+
+						}
+						break;
+
+					case 3:							//On pointe vers l'ouest
 						if( y > 0 && !map[x][y-1] ){
 
 							arrivee = create_Coordonnee(x, y-1);
@@ -310,67 +270,108 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 						}
 						break;
 
-					case 3:							//On pointe vers l'ouest
-						if( x < N-1 && !map[x+1][y] ){
-
-							arrivee = create_Coordonnee(x+1, y);
-
-							individu.direction = 1;			//On pointe desormais l'est
-
-						}
-						break;
-
 					default:
 						exit(SWITCH_ERROR);
 						break;
 				}
 
-			}else{						//On va a gauche
+			}else{
 
-				switch( individu.direction ){
-					case 0:							//On pointe vers le nord
-						if( x > 0 && !map[x-1][y] ){
+				if( resultat < individu.right + individu.backward ){	//On recule
 
-							arrivee = create_Coordonnee(x-1, y);
+					switch( individu.direction ){
+						case 0:							//On pointe vers le nord
+							if( y < M-1 && !map[x][y+1] ){
 
-							individu.direction = 3;			//on pointe desormais vers l'ouest
+								arrivee = create_Coordonnee(x, y+1);
 
-						}
-						break;
+								individu.direction = 2;			//on pointe desormais vers le sud
 
-					case 1:							//On pointe vers l'est
-						if( y > 0 && !map[x][y-1] ){
+							}
+							break;
 
-							arrivee = create_Coordonnee(x, y-1);
+						case 1:							//On pointe vers l'est
+							if( x > 0 && !map[x-1][y] ){
 
-							individu.direction = 0; 			//On pointe desormais le nord
+								arrivee = create_Coordonnee(x-1, y);
 
-						}
-						break;
+								individu.direction = 3; 			//On pointe desormais l'ouest'
 
-					case 2:							//On pointe vers le sud
-						if( x < N-1 && !map[x+1][y] ){
+							}
+							break;
 
-							arrivee = create_Coordonnee(x+1, y);
+						case 2:							//On pointe vers le sud
+							if( y > 0 && !map[x][y-1] ){
 
-							individu.direction = 1;			//On pointe desormais l'est
+								arrivee = create_Coordonnee(x, y-1);
 
-						}
-						break;
+								individu.direction = 0;			//On pointe desormais le nord
 
-					case 3:							//On pointe vers l'ouest
-						if( y < M-1 && !map[x][y+1] ){
+							}
+							break;
 
-							arrivee = create_Coordonnee(x, y+1);
+						case 3:							//On pointe vers l'ouest
+							if( x < N-1 && !map[x+1][y] ){
 
-							individu.direction = 2;			//On pointe desormais le sud
+								arrivee = create_Coordonnee(x+1, y);
 
-						}
-						break;
+								individu.direction = 1;			//On pointe desormais l'est
 
-					default:
-						exit(SWITCH_ERROR);
-						break;
+							}
+							break;
+
+						default:
+							exit(SWITCH_ERROR);
+							break;
+					}
+
+				}else{						//On va a gauche
+
+					switch( individu.direction ){
+						case 0:							//On pointe vers le nord
+							if( x > 0 && !map[x-1][y] ){
+
+								arrivee = create_Coordonnee(x-1, y);
+
+								individu.direction = 3;			//on pointe desormais vers l'ouest
+
+							}
+							break;
+
+						case 1:							//On pointe vers l'est
+							if( y > 0 && !map[x][y-1] ){
+
+								arrivee = create_Coordonnee(x, y-1);
+
+								individu.direction = 0; 			//On pointe desormais le nord
+
+							}
+							break;
+
+						case 2:							//On pointe vers le sud
+							if( x < N-1 && !map[x+1][y] ){
+
+								arrivee = create_Coordonnee(x+1, y);
+
+								individu.direction = 1;			//On pointe desormais l'est
+
+							}
+							break;
+
+						case 3:							//On pointe vers l'ouest
+							if( y < M-1 && !map[x][y+1] ){
+
+								arrivee = create_Coordonnee(x, y+1);
+
+								individu.direction = 2;			//On pointe desormais le sud
+
+							}
+							break;
+
+						default:
+							exit(SWITCH_ERROR);
+							break;
+					}
 				}
 			}
 		}
@@ -388,11 +389,15 @@ Couple resultat_genetique_simple(SimpleMap map, Coordonnee begin, Coordonnee end
 	int min = LIMITE;
 
 	for(int i = 0; i < NB_GENERATION; i++){
+		printf("\nGeneration : %d\n", i);
 		Couple couple = generation_simple(map, begin, end, population);
 
 		int* resultats = couple.key;
 
 		int* rank = sort(resultats, TAILLE, TAILLE-1);
+
+		printf("Best at this step : %d\n", resultats[rank[0]]);
+		printf("Former best : %d\n", min);
 
 		if(resultats[rank[0]] < min){
 			min = resultats[rank[0]];

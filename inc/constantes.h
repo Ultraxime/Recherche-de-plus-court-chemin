@@ -5,9 +5,9 @@
 
 #define PUISSANCE 10 	//pas avec lequel on ajoute les cartes pour le bruit de Perlin
 
-#define N 200
+#define N 1080
 
-#define M 100
+#define M 720
 
 #define MUTATION 100000	//Probabilite de mutation
 
