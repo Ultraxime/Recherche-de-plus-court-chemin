@@ -126,13 +126,13 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 
 	Couple couple;
 
-	int min = LIMITE;
+	int min = LIMITE +1;										//Cela permet d'etre sur de tracer un chemin mais s'il n'est pas intéressant
 
 	List chemin = create_List();
 
 	for(int i = 0; i < TAILLE; i++){
 
-		if(i%10==0)printf("%d\n", i);
+		//if(i%10==0)printf("%d\n", i);							//Unsued now but will be in order to see the progress of the algorithm
 
 		couple = life_simple(map, begin, end, population[i]);
 
@@ -140,8 +140,6 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 
 		if(scores[i] < min){
 			min = scores[i];
-
-			printf("%d\n", min);
 
 			clear_List(chemin);
 			chemin = list_of_void(couple.value);
@@ -388,6 +386,9 @@ Couple resultat_genetique_simple(SimpleMap map, Coordonnee begin, Coordonnee end
 	int min = LIMITE;
 
 	for(int i = 0; i < NB_GENERATION; i++){
+
+		
+
 		Couple couple = generation_simple(map, begin, end, population);
 
 		int* resultats = couple.key;
