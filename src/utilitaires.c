@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include "structures.h"
 #include "utilitaires.h"
@@ -68,7 +68,7 @@ int* sort(int* value, int n, int i){
 
 	if( i <= 0){
 		
-		classement = malloc(n * sizeof(int));
+		classement = calloc(n, sizeof(int));
 
 		if(classement == NULL){
 			printf("Cannot create the table");
@@ -99,5 +99,11 @@ int* sort(int* value, int n, int i){
 	classement[j] = tmp;
 
 	return classement;
+
+}
+
+Uint32 color(int r, int g, int b){
+
+	return ((r<<8)+g << 8) +b;
 
 }

@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include "structures.h"
 #include "fonctions_cartes.h"
@@ -13,7 +13,7 @@ SimpleMap simpleMap_from_DrawableMap(DrawableMap origin){
 
 	SimpleMap map = NULL;
 
-	map = malloc(N*sizeof(bool*));
+	map = calloc(N,sizeof(bool*));
 
 	if(map == NULL){
 		printf("Cannot create the main table\n");
@@ -22,7 +22,7 @@ SimpleMap simpleMap_from_DrawableMap(DrawableMap origin){
 
 	for(int i = 0 ; i < N ; i++){
 
-		map[i] = malloc(M*sizeof(bool));
+		map[i] = calloc(M,sizeof(bool));
 
 		if(map[i] == NULL){
 			printf("Cannot create table %d\n",i);
@@ -42,7 +42,7 @@ DrawableMap random_DrawableMap(int n, int m, //Dimension de la carte a créer
 								int pasN, int pasM ){//pas pour le gradient
 	DrawableMap map = NULL;
 
-	map = malloc(n*sizeof(char*));
+	map = calloc(n,sizeof(char*));
 
 	if(map == NULL){
 		printf("Cannot create the main table\n");
@@ -51,7 +51,7 @@ DrawableMap random_DrawableMap(int n, int m, //Dimension de la carte a créer
 
 	for(int i = 0 ; i < n ; i++){
 
-		map[i] = malloc(m*sizeof(char));
+		map[i] = calloc(m,sizeof(char));
 
 		if(map[i] == NULL){
 			printf("Cannot create table %d\n",i);
@@ -187,7 +187,7 @@ DrawableMap bruit_Perlin_DrawableMap(){
 
 	LongMap longMap = NULL;
 
-	longMap = malloc(N*sizeof(long*));
+	longMap = calloc(N,sizeof(long*));
 
 	if(longMap == NULL){
 		printf("Cannot create main table\n");
@@ -198,7 +198,7 @@ DrawableMap bruit_Perlin_DrawableMap(){
 
 	for(int i = 0; i < N; i++){
 
-		longMap[i] = malloc(M*sizeof(long));
+		longMap[i] = calloc(M,sizeof(long));
 
 		if(longMap[i] == NULL){
 			printf("Cannot create table %d\n", i);
@@ -236,7 +236,7 @@ DrawableMap bruit_Perlin_DrawableMap(){
 
 	DrawableMap map = NULL;
 
-	map = malloc(N*sizeof(char*));
+	map = calloc(N,sizeof(char*));
 
 	if(map == NULL){
 		printf("Cannot create the main table\n");
@@ -245,7 +245,7 @@ DrawableMap bruit_Perlin_DrawableMap(){
 
 	for(int i = 0; i < N; i++){
 
-		map[i] = malloc(M*sizeof(char));
+		map[i] = calloc(M,sizeof(char));
 
 		if( map[i] == NULL ){
 			printf("Cannot create table %d\n", i);
@@ -262,24 +262,24 @@ DrawableMap bruit_Perlin_DrawableMap(){
 	return map;
 }
 
-void draw_DrawableMap(DrawableMap map, SDL_Surface* screen, Coordonnee begin, Coordonnee end){
+void draw_DrawableMap(DrawableMap map, SDL_Renderer* renderer, Coordonnee begin, Coordonnee end){
 
-	if(SDL_LockSurface(screen) < 0 ){
-        printf("Unable to lock screen : %s\n", SDL_GetError());
-        exit(LOCK_SURFACE_ERROR);
+	Uint32 *pixels;
+    pixels = calloc( N*M, sizeof(Uint32));
+ 
+    if( !pixels ){
+    	printf("Unable to allocate the memory for the screen");
+    	exit(MALLOC_ERROR);
     }
 
-    Uint32 *pixels;
-    pixels = screen->pixels;
-
-    Uint32 darkBlue = SDL_MapRGB(screen->format, 70, 169, 224);
-    Uint32 blue = SDL_MapRGB(screen->format, 160, 203, 237);
-    Uint32 lightBlue = SDL_MapRGB(screen->format, 213, 234, 248);
+    Uint32 darkBlue = color(70, 169, 224);
+    Uint32 blue = color(160, 203, 237);
+    Uint32 lightBlue = color(213, 234, 248);
     
-    Uint32 green = SDL_MapRGB(screen->format, 167, 210, 101);
-    Uint32 lightOrange = SDL_MapRGB(screen->format, 254, 240, 191);
-    Uint32 orange = SDL_MapRGB(screen->format, 251, 207, 112);
-    Uint32 brown = SDL_MapRGB(screen->format, 243, 159, 20);
+    Uint32 green = color(167, 210, 101);
+    Uint32 lightOrange = color(254, 240, 191);
+    Uint32 orange = color(251, 207, 112);
+    Uint32 brown = color(243, 159, 20);
 
     for(int i = 0; i < N; i++){
 
@@ -317,36 +317,44 @@ void draw_DrawableMap(DrawableMap map, SDL_Surface* screen, Coordonnee begin, Co
     	}
     }
 
-    Uint32 begin_color = SDL_MapRGB(screen->format, 255, 255, 0);
+    Uint32 begin_color = color(255, 255, 0);
 
     draw_coordonnee(begin, pixels, begin_color);
 
-    Uint32 end_color = SDL_MapRGB(screen->format, 0, 0, 0);
+    Uint32 end_color = color(0, 0, 0);
 
     draw_coordonnee(end, pixels, end_color);
 
-    SDL_UnlockSurface(screen);
+    SDL_Texture* texture = SDL_CreateTexture(renderer, 
+                               SDL_PIXELFORMAT_ARGB8888, 
+                               SDL_TEXTUREACCESS_STREAMING, 
+                               N, M);
 
-    SDL_Flip(screen);
+    SDL_UpdateTexture(texture, NULL, pixels, N * sizeof (Uint32));
+
+    SDL_RenderClear(renderer); 
+    SDL_RenderCopy(renderer, texture, NULL, NULL); 
+    SDL_RenderPresent(renderer);
 
     pause();
 
 }
 
 
-void draw_SimpleMap(SimpleMap map, SDL_Surface* screen, Coordonnee begin, Coordonnee end){
+void draw_SimpleMap(SimpleMap map, SDL_Renderer* renderer, Coordonnee begin, Coordonnee end){
 
-	if(SDL_LockSurface(screen) < 0 ){
-        printf("Unable to lock screen : %s\n", SDL_GetError());
-        exit(LOCK_SURFACE_ERROR);
-    }
 
     Uint32 *pixels;
-    pixels = screen->pixels;
+    pixels = calloc( N*M, sizeof(Uint32));
 
-    Uint32 blue = SDL_MapRGB(screen->format, 160, 203, 237);
+    if( !pixels ){
+    	printf("Unable to alloc the memory for the screen");
+    	exit(MALLOC_ERROR);
+    }
+
+    Uint32 blue = color(160, 203, 237);
     
-    Uint32 green = SDL_MapRGB(screen->format, 167, 210, 101);
+    Uint32 green = color(167, 210, 101);
     
     for(int i = 0; i < N; i++){
 
@@ -364,42 +372,56 @@ void draw_SimpleMap(SimpleMap map, SDL_Surface* screen, Coordonnee begin, Coordo
     	}
     }
 
-    Uint32 begin_color = SDL_MapRGB(screen->format, 255, 255, 0);
+    Uint32 begin_color = color(255, 255, 0);
 
     draw_coordonnee(begin, pixels, begin_color);
 
-    Uint32 end_color = SDL_MapRGB(screen->format, 0, 0, 0);
+    Uint32 end_color = color(0, 0, 0);
 
     draw_coordonnee(end, pixels, end_color);
 
-    SDL_UnlockSurface(screen);
+    SDL_Texture* texture = SDL_CreateTexture(renderer, 
+                               SDL_PIXELFORMAT_ARGB8888, 
+                               SDL_TEXTUREACCESS_STREAMING, 
+                               N, M);
 
-    SDL_Flip(screen);
+    SDL_UpdateTexture(texture, NULL, pixels, N * sizeof (Uint32));
+
+    SDL_RenderClear(renderer); 
+    SDL_RenderCopy(renderer, texture, NULL, NULL); 
+    SDL_RenderPresent(renderer);
 
 }
 
-void draw_way(List way, SDL_Surface* screen){
-
-	if(SDL_LockSurface(screen) < 0 ){
-        printf("Unable to lock screen : %s\n", SDL_GetError());
-        exit(LOCK_SURFACE_ERROR);
-    }
+void draw_way(List way, SDL_Renderer* renderer){
 
     Coordonnee coordonnee;
 
 	Uint32 *pixels;
-    pixels = screen->pixels;
+    pixels = calloc( N*M, sizeof(Uint32));
 
-    Uint32 color = SDL_MapRGB(screen->format, 255, 0, 0);
+    if( !pixels ){
+    	printf("Unable to alloc the memory for the screen");
+    	exit(MALLOC_ERROR);
+    }
+
+    Uint32 red = color(255, 0, 0);
 
 	while(!is_empty_List(way)){
 		coordonnee = coordonnee_of_void(pop_List(&way));
-		draw_coordonnee(coordonnee, pixels, color);
+		draw_coordonnee(coordonnee, pixels, red);
 	}
 
-	SDL_UnlockSurface(screen);
+	SDL_Texture* texture = SDL_CreateTexture(renderer, 
+                               SDL_PIXELFORMAT_ARGB8888, 
+                               SDL_TEXTUREACCESS_STREAMING, 
+                               N, M);
 
-    SDL_Flip(screen);
+    SDL_UpdateTexture(texture, NULL, pixels, N * sizeof (Uint32));
+
+    SDL_RenderClear(renderer); 
+    SDL_RenderCopy(renderer, texture, NULL, NULL); 
+    SDL_RenderPresent(renderer);
 
 }
 

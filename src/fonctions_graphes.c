@@ -37,7 +37,7 @@ Couple resultat_graphe_simple(SimpleMap map, Coordonnee coordonneeBegin, Coordon
 
 	bool* mark;
 
-	mark = malloc( graph.n * sizeof(bool));
+	mark = calloc( graph.n, sizeof(bool));
 
 	if(mark == NULL){
 		printf("Cannot create mark table");
@@ -49,7 +49,12 @@ Couple resultat_graphe_simple(SimpleMap map, Coordonnee coordonneeBegin, Coordon
 
 	int* fathers;
 
-	fathers = malloc( graph.n * sizeof(int));
+	fathers = calloc( graph.n, sizeof(int));
+
+	if( !fathers ){
+		printf("Unable to allocate the memory for the fathers");
+		exit(MALLOC_ERROR);
+	}
 
 	for(int i = 0; i < graph.n; i++)
 		fathers[i] = -1;

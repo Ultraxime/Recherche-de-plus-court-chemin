@@ -14,7 +14,7 @@ Population first_Population(){
 
 	Population population;
 
-	population = malloc(TAILLE * sizeof(Individu));
+	population = calloc(TAILLE, sizeof(Individu));
 
 	if(population == NULL){
 		printf("Cannot create the first population");
@@ -31,7 +31,7 @@ Population evolution(Population original, int* rank){
 
 	int kept = 0;
 
-	Population population = malloc(TAILLE * sizeof(Individu));
+	Population population = calloc(TAILLE, sizeof(Individu));
 
 	if(population == NULL){
 		printf("Cannot create the new population");
@@ -117,7 +117,7 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 
 	unsigned int* scores;
 
-	scores = malloc(TAILLE * sizeof(int));
+	scores = calloc(TAILLE, sizeof(int));
 
 	if(scores == NULL){
 		printf("Cannot create scores table");
@@ -377,7 +377,7 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 }
 
 
-Couple resultat_genetique_simple(SimpleMap map, Coordonnee begin, Coordonnee end, SDL_Surface* screen){
+Couple resultat_genetique_simple(SimpleMap map, SDL_Renderer* renderer, Coordonnee begin, Coordonnee end){
 
 	Population population = first_Population();
 
@@ -401,8 +401,8 @@ Couple resultat_genetique_simple(SimpleMap map, Coordonnee begin, Coordonnee end
 			clear_List(chemin);
 			chemin = list_of_void(couple.value);
 
-			draw_SimpleMap(map, screen, begin, end);
-			draw_way(chemin, screen);
+			draw_SimpleMap(map, renderer, begin, end);
+			draw_way(chemin, renderer);
 		}else{
 			clear_List(list_of_void(couple.value));
 		}

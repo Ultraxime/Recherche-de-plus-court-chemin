@@ -16,16 +16,32 @@ int main(){
 		return INIT_ERROR;
 	}
 
-	SDL_Surface* screen = SDL_SetVideoMode(N ,M , 32,
-                                           SDL_HWSURFACE|SDL_DOUBLEBUF);//|SDL_FULLSCREEN);
+	SDL_Window* screen = SDL_CreateWindow("Recherche de plus court chemin", 
+											SDL_WINDOWPOS_CENTERED,
+											SDL_WINDOWPOS_CENTERED,
+											N ,M,
+											SDL_WINDOW_FULLSCREEN_DESKTOP);
     if ( !screen )
     {
         printf("Unable to set %dx%d video: %s\n", N, M, SDL_GetError());
         return INIT_ERROR;
     }
 
-    SDL_WM_SetCaption("Recherche de plus court chemin", NULL);
-	
+    SDL_Renderer* renderer = SDL_CreateRenderer(screen, -1, 0);
+
+    if( !renderer )
+    {
+    	printf("Unable to set %dx%d renderer: %s\n", N, M, SDL_GetError());
+    	return INIT_ERROR;
+    }
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");   //Permet de travailler sur une ecran NxM pour le code
+	SDL_RenderSetLogicalSize(renderer, N, M);				//Le GPU se chargeant de convertir en la bonne taille d'ecran
+
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 		//create a black screen as a start
+	SDL_RenderClear(renderer); 
+	SDL_RenderPresent(renderer);
+
 	DrawableMap map = bruit_Perlin_DrawableMap();
 
 	Coordonnee begin;
@@ -43,15 +59,15 @@ int main(){
 		end = random_Coordonnee(N, M);
 
 
-	draw_DrawableMap(map, screen, begin, end);
+	draw_DrawableMap(map, renderer, begin, end);
 
 	SimpleMap map2 = simpleMap_from_DrawableMap(map);
 
-	draw_SimpleMap(map2, screen, begin, end);
+	draw_SimpleMap(map2, renderer, begin, end);
 
 	pause();
 
-	Couple genetique = resultat_genetique_simple(map2, begin, end, screen);
+	Couple genetique = resultat_genetique_simple(map2, renderer, begin, end);
 
 	return 0;
 }

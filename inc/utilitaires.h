@@ -12,4 +12,6 @@ void pause();
 
 int* sort(int*, int, int);
 
+Uint32 color(int, int, int);
+
 #endif

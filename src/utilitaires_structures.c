@@ -321,7 +321,7 @@ Graph create_Graph(unsigned int n){
 
 	graph.n = n;
 
-	graph.arretes = malloc(n * sizeof(List));
+	graph.arretes = calloc(n, sizeof(List));
 
 	if(graph.arretes == NULL){
 		printf("Cannot create the graph");
