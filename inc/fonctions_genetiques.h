@@ -21,6 +21,6 @@ Couple life_simple(SimpleMap, Coordonnee, Coordonnee, Individu);
 
 Coordonnee next_step_simple(SimpleMap, Coordonnee, Individu);
 
-Couple resultat_genetique_simple(SimpleMap, SDL_Renderer*, Coordonnee, Coordonnee);
+Couple resultat_genetique_simple(SimpleMap, SDL_Renderer*, SDL_Texture*, Coordonnee, Coordonnee);
 
 #endif

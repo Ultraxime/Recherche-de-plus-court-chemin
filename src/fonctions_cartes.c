@@ -262,9 +262,9 @@ DrawableMap bruit_Perlin_DrawableMap(){
 	return map;
 }
 
-void draw_DrawableMap(DrawableMap map, SDL_Renderer* renderer, Coordonnee begin, Coordonnee end){
+Screen screen_from_DrawableMap(DrawableMap map){
 
-	Uint32 *pixels;
+	Screen pixels;
     pixels = calloc( N*M, sizeof(Uint32));
  
     if( !pixels ){
@@ -317,34 +317,14 @@ void draw_DrawableMap(DrawableMap map, SDL_Renderer* renderer, Coordonnee begin,
     	}
     }
 
-    Uint32 begin_color = color(255, 255, 0);
-
-    draw_coordonnee(begin, pixels, begin_color);
-
-    Uint32 end_color = color(0, 0, 0);
-
-    draw_coordonnee(end, pixels, end_color);
-
-    SDL_Texture* texture = SDL_CreateTexture(renderer, 
-                               SDL_PIXELFORMAT_ARGB8888, 
-                               SDL_TEXTUREACCESS_STREAMING, 
-                               N, M);
-
-    SDL_UpdateTexture(texture, NULL, pixels, N * sizeof (Uint32));
-
-    SDL_RenderClear(renderer); 
-    SDL_RenderCopy(renderer, texture, NULL, NULL); 
-    SDL_RenderPresent(renderer);
-
-    pause();
-
+    return pixels;
 }
 
 
-void draw_SimpleMap(SimpleMap map, SDL_Renderer* renderer, Coordonnee begin, Coordonnee end){
+Screen screen_from_SimpleMap(SimpleMap map){
 
 
-    Uint32 *pixels;
+    Screen pixels;
     pixels = calloc( N*M, sizeof(Uint32));
 
     if( !pixels ){
@@ -372,38 +352,13 @@ void draw_SimpleMap(SimpleMap map, SDL_Renderer* renderer, Coordonnee begin, Coo
     	}
     }
 
-    Uint32 begin_color = color(255, 255, 0);
-
-    draw_coordonnee(begin, pixels, begin_color);
-
-    Uint32 end_color = color(0, 0, 0);
-
-    draw_coordonnee(end, pixels, end_color);
-
-    SDL_Texture* texture = SDL_CreateTexture(renderer, 
-                               SDL_PIXELFORMAT_ARGB8888, 
-                               SDL_TEXTUREACCESS_STREAMING, 
-                               N, M);
-
-    SDL_UpdateTexture(texture, NULL, pixels, N * sizeof (Uint32));
-
-    SDL_RenderClear(renderer); 
-    SDL_RenderCopy(renderer, texture, NULL, NULL); 
-    SDL_RenderPresent(renderer);
+    return pixels;
 
 }
 
-void draw_way(List way, SDL_Renderer* renderer){
+void draw_way(List way, Screen pixels){
 
     Coordonnee coordonnee;
-
-	Uint32 *pixels;
-    pixels = calloc( N*M, sizeof(Uint32));
-
-    if( !pixels ){
-    	printf("Unable to alloc the memory for the screen");
-    	exit(MALLOC_ERROR);
-    }
 
     Uint32 red = color(255, 0, 0);
 
@@ -412,20 +367,9 @@ void draw_way(List way, SDL_Renderer* renderer){
 		draw_coordonnee(coordonnee, pixels, red);
 	}
 
-	SDL_Texture* texture = SDL_CreateTexture(renderer, 
-                               SDL_PIXELFORMAT_ARGB8888, 
-                               SDL_TEXTUREACCESS_STREAMING, 
-                               N, M);
-
-    SDL_UpdateTexture(texture, NULL, pixels, N * sizeof (Uint32));
-
-    SDL_RenderClear(renderer); 
-    SDL_RenderCopy(renderer, texture, NULL, NULL); 
-    SDL_RenderPresent(renderer);
-
 }
 
-void draw_coordonnee(Coordonnee coordonnee, Uint32* pixels, Uint32 color){
+void draw_coordonnee(Coordonnee coordonnee, Screen pixels, Uint32 color){
 
 	pixels[coordonnee.x + coordonnee.y*N] = color;
 	pixels[coordonnee.x+1 + coordonnee.y*N] = color;
@@ -436,4 +380,15 @@ void draw_coordonnee(Coordonnee coordonnee, Uint32* pixels, Uint32 color){
 	pixels[coordonnee.x + coordonnee.y*N-N] = color;
 	pixels[coordonnee.x+1 + coordonnee.y*N-N] = color;
 	pixels[coordonnee.x-1 + coordonnee.y*N-N] = color;
+}
+
+void show(SDL_Renderer* renderer, SDL_Texture* texture, Screen pixels){
+
+	SDL_UpdateTexture(texture, NULL, pixels, N * sizeof(Uint32) );
+	SDL_RenderClear(renderer); 
+    SDL_RenderCopy(renderer, texture, NULL, NULL); 
+    SDL_RenderPresent(renderer);
+
+    pause();
+
 }

@@ -379,7 +379,7 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 }
 
 
-Couple resultat_genetique_simple(SimpleMap map, SDL_Renderer* renderer, Coordonnee begin, Coordonnee end){
+Couple resultat_genetique_simple(SimpleMap map, SDL_Renderer* renderer, SDL_Texture* texture, Coordonnee begin, Coordonnee end){
 
 	Population population = first_Population();
 
@@ -405,8 +405,15 @@ Couple resultat_genetique_simple(SimpleMap map, SDL_Renderer* renderer, Coordonn
 			clear_List(chemin);
 			chemin = list_of_void(couple.value);
 
-			draw_SimpleMap(map, renderer, begin, end);
-			draw_way(chemin, renderer);
+			Screen pixels = screen_from_SimpleMap(map);
+			draw_coordonnee(begin, pixels, color(255, 255, 255));
+			draw_coordonnee(end, pixels, color(0, 0, 0));
+			draw_way(chemin, pixels);
+
+			show(renderer, texture, pixels);
+
+			free(pixels);
+			
 		}else{
 			clear_List(list_of_void(couple.value));
 		}

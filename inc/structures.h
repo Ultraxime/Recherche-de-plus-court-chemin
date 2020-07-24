@@ -3,8 +3,12 @@
 
 #include <stdbool.h>
 
+#include <SDL2/SDL.h>
+
 
 typedef unsigned char** DrawableMap;
+
+typedef Uint32* Screen;
 
 typedef bool** SimpleMap;
 

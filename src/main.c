@@ -35,12 +35,18 @@ int main(){
     	return INIT_ERROR;
     }
 
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");   //Permet de travailler sur une ecran NxM pour le code
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");   //Permet de travailler sur une ecran NxM quelque soit la résolution
 	SDL_RenderSetLogicalSize(renderer, N, M);				//Le GPU se chargeant de convertir en la bonne taille d'ecran
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 		//create a black screen as a start
 	SDL_RenderClear(renderer); 
 	SDL_RenderPresent(renderer);
+
+	SDL_Texture* texture = SDL_CreateTexture(renderer, 			//Creation de la texture qui sera utilisé pour les affichages successifs
+                               SDL_PIXELFORMAT_ARGB8888, 
+                               SDL_TEXTUREACCESS_STREAMING, 
+                               N, M);
+
 
 	DrawableMap map = bruit_Perlin_DrawableMap();
 
@@ -58,16 +64,25 @@ int main(){
 	while( map[end.x][end.y] >=H || is_equal_Coordonnee(begin, end))	//On ne peut finir sur terre et avoir un debut egal a une fin n'a pas d'interet
 		end = random_Coordonnee(N, M);
 
+	Screen pixels = screen_from_DrawableMap(map);
+	draw_coordonnee(begin, pixels, color(255, 255, 255));
+	draw_coordonnee(end, pixels, color(0, 0, 0));
 
-	draw_DrawableMap(map, renderer, begin, end);
+	show(renderer, texture, pixels);
+
+	free(pixels);
 
 	SimpleMap map2 = simpleMap_from_DrawableMap(map);
 
-	draw_SimpleMap(map2, renderer, begin, end);
+	pixels = screen_from_SimpleMap(map2);
+	draw_coordonnee(begin, pixels, color(255, 255, 255));
+	draw_coordonnee(end, pixels, color(0, 0, 0));
 
-	pause();
+	show(renderer, texture, pixels);
 
-	Couple genetique = resultat_genetique_simple(map2, renderer, begin, end);
+	free(pixels);
+
+	Couple genetique = resultat_genetique_simple(map2, renderer, texture, begin, end);
 
 	return 0;
 }
