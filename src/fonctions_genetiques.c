@@ -132,7 +132,9 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 
 	for(int i = 0; i < TAILLE; i++){
 
-		//if(i%10==0)printf("%d\n", i);							//Unsued now but will be in order to see the progress of the algorithm
+		#ifdef DEBUG
+			if(i%10==0)printf("%d\n", i);
+		#endif
 
 		couple = life_simple(map, begin, end, population[i]);
 
@@ -387,7 +389,9 @@ Couple resultat_genetique_simple(SimpleMap map, SDL_Renderer* renderer, Coordonn
 
 	for(int i = 0; i < NB_GENERATION; i++){
 
-		
+		#ifdef DEBUG
+			printf("Génération : %d\n", i );
+		#endif
 
 		Couple couple = generation_simple(map, begin, end, population);
 
