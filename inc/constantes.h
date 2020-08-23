@@ -17,4 +17,8 @@
 
 #define NB_GENERATION 100	//Nombre de générations
 
+/*  Color definitions */
+#define ERROR_COLOR "\033[31m"
+#define COLOR_RESET "\033[0m"
+
 #endif

@@ -4,6 +4,8 @@
 
 #include "structures.h"
 
+void arg_parser(int, char**);
+
 bool init();
 
 List facteurs_premiers(int);

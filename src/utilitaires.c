@@ -2,11 +2,44 @@
 #include <stdio.h>
 #include <time.h>
 #include <SDL/SDL.h>
+#include <getopt.h>
+#include <stdint.h>
 
 #include "structures.h"
 #include "utilitaires.h"
 #include "utilitaires_structures.h"
 #include "errors.h"
+#include "constantes.h"
+
+void arg_parser(int argc, char** argv) {
+    
+    int32_t opt_val;
+
+    while (true) {
+	static struct option options[] = {
+	    {"help", 		no_argument, 		0, 'h'},
+	    {"nb-mutation", 	required_argument, 	0, 'm'}
+	};
+	opt_val = getopt_long(argc, argv, "hm:", options, NULL);
+
+	// No more options
+	if (opt_val == -1) {
+	    break;
+	}
+
+	switch (opt_val) {
+	    case 'h' :
+		exit(0);
+		break;
+	    case 'm' :
+		printf("%s\n", optarg);
+		break;
+	    default:
+		exit(1);
+		break;
+	}
+    }
+}
 
 bool init(){
 
