@@ -9,7 +9,10 @@
 #include "utilitaires.h"
 #include "constantes.h"
 
-int main(){
+int main(int argc, char** argv){
+
+	arg_parser(argc, argv);
+	// exit(1);
 
 	if(!init()){
 		printf("Error during initialization");

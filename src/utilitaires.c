@@ -10,7 +10,18 @@
 #include "utilitaires_structures.h"
 #include "errors.h"
 #include "constantes.h"
+#include "fonctions_genetiques.h"
 
+/*
+ ********************************************************
+ * arg_parser(): Parse arguments 
+ *	
+ * @argc: Number of arguments
+ * @argv: Array of arguments
+ *
+ * Parse the arguments gave at start
+ *********************************************************
+*/
 void arg_parser(int argc, char** argv) {
     
     int32_t opt_val;
@@ -29,16 +40,34 @@ void arg_parser(int argc, char** argv) {
 
 	switch (opt_val) {
 	    case 'h' :
+		help(argv[0]);
 		exit(0);
 		break;
 	    case 'm' :
-		printf("%s\n", optarg);
+		set_nb_generation(atoi(optarg));
 		break;
 	    default:
+		help(argv[0]);
 		exit(1);
 		break;
 	}
     }
+}
+
+/*
+ ********************************************************
+ * help(): Print the help
+ *
+ * @exe_name: Name of the executable
+ *
+ * Print the help of the software with options
+ *********************************************************
+*/
+void help(char* exe_name) {
+    printf("USAGE: %s [-h] [-m nb_mutatations]\n\n", exe_name);
+    printf("Options:\n");
+    printf("--help | -h : Print this help message\n");
+    printf("--nb-mutation | -m <nb_mutatations> : Change the number of mutations. (Default : 100)\n");
 }
 
 bool init(){

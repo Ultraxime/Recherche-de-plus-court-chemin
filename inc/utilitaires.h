@@ -6,6 +6,8 @@
 
 void arg_parser(int, char**);
 
+void help(char*);
+
 bool init();
 
 List facteurs_premiers(int);

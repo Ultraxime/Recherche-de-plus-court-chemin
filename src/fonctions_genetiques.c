@@ -9,6 +9,21 @@
 #include "utilitaires.h"
 #include "fonctions_cartes.h"
 
+/* Global vars for args */
+uint32_t nb_generation = DEFAULT_NB_GENERATION;
+
+/*
+ ********************************************************
+ * set_nb_generation(): Change the default number of nb_generation
+ *
+ * @new_value: new value for nb_generation
+ *
+ *Change the default number of nb_generation with new_value
+ *********************************************************
+*/
+void set_nb_generation(uint32_t new_value) {
+    nb_generation = new_value;
+}
 
 Population first_Population(){
 
@@ -387,7 +402,7 @@ Couple resultat_genetique_simple(SimpleMap map, Coordonnee begin, Coordonnee end
 
 	int min = LIMITE;
 
-	for(int i = 0; i < NB_GENERATION; i++){
+	for(uint32_t i = 0; i < nb_generation; i++){
 		Couple couple = generation_simple(map, begin, end, population);
 
 		int* resultats = couple.key;
