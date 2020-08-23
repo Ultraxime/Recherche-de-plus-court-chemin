@@ -10,3 +10,5 @@ all: search
 search: $(SRC_FILES)
 	$(CC) -o $@ $(SRC_FILES) $(CFLAGS) $(LIBFLAGS)
 
+clean:
+	rm -f search
