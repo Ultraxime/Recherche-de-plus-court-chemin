@@ -17,7 +17,7 @@
 
 #define LIMITE 10*N*M 		//Longueur max d'un chemin
 
-#define DEFAULT_NB_GENERATION 100	//Nombre de générations
+#define DEFAULT_NB_GENERATION 100	// Default generation number. Can be change with arguments at execution
 
 /*  Color definitions */
 #define ERROR_COLOR "\033[31m"
