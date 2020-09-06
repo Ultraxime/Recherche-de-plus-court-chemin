@@ -23,4 +23,5 @@
 #define ERROR_COLOR "\033[31m"
 #define COLOR_RESET "\033[0m"
 
+extern uint16_t nb_generation;
 #endif

@@ -10,17 +10,8 @@
 #include "fonctions_cartes.h"
 
 /* Global vars for args */
-uint32_t nb_generation = DEFAULT_NB_GENERATION;
+uint16_t nb_generation = DEFAULT_NB_GENERATION;
 
-/*
- ********************************************************
- * set_nb_generation(): Change the default number of nb_generation
- *
- * @new_value: new value for nb_generation
- *
- *Change the default number of nb_generation with new_value
- *********************************************************
-*/
 void set_nb_generation(uint32_t new_value) {
     nb_generation = new_value;
 }

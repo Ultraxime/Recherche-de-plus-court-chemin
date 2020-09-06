@@ -5,8 +5,6 @@
 
 #include "structures.h"
 
-void set_nb_generation(uint32_t);
-
 Population first_Population();
 
 Population evolution(Population, int*);

@@ -44,7 +44,7 @@ void arg_parser(int argc, char** argv) {
 		exit(0);
 		break;
 	    case 'm' :
-		set_nb_generation(atoi(optarg));
+		nb_generation = atoi(optarg);
 		break;
 	    default:
 		help(argv[0]);
