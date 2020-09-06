@@ -1,7 +1,7 @@
 CC = gcc
 
 CFLAGS = -Iinc 
-LIBFLAGS = -lm -lSDL2
+LIBFLAGS = -lm -lSDL2 -lpthread
 
 SRC_FILES=$(wildcard src/*.c)
 

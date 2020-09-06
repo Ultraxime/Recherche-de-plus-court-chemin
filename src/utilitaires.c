@@ -18,8 +18,15 @@ bool init(){
         return false;
     }
 
+    pthread_t* interruptionT = NULL;
+
+    while( pthread_create(interruptionT, NULL, interruption, NULL))
+
     // make sure SDL cleans up before exit
     atexit(SDL_Quit);
+
+    // make sure all thread are shut down before exit
+    atexit(cleaning_thread);
 
 	return true;    
 }
@@ -106,4 +113,42 @@ Uint32 color(int r, int g, int b){
 
 	return ((r<<8)+g << 8) +b;
 
+}
+
+void* interruption(void* arg){
+
+	bool end = true;
+
+	while(end){
+
+		SDL_Event event;
+
+		while(SDL_PollEvent(&event)){		//On attend un event
+
+			switch(event.type){
+
+				case SDL_QUIT:			//Si une demande d'interruption est levée
+					end = false;
+					break;
+
+				default :
+					break;
+			}
+		}
+	}
+
+	exit(INTERRUPTION_ERROR);
+
+	return NULL;
+}
+
+void cleaning_thread(){
+
+	pthread_t current = pthread_self();
+
+	for(pthread_t i = 0; i <= 1024; i++)
+
+		if(i != current)
+			
+			pthread_cancel(i);
 }
