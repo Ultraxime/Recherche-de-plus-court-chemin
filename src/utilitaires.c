@@ -18,9 +18,16 @@ bool init(){
         return false;
     }
 
-    pthread_t* interruptionT = NULL;
+    pthread_t interruptionT;
 
-    while( pthread_create(interruptionT, NULL, interruption, NULL))
+    uint8_t try = 255;
+
+    while( pthread_create( &interruptionT, NULL, interruption, NULL) && try > 0 ){
+
+    	printf("Faillure of the %d creation of thread\n", 255-try );
+    	try --;
+    }
+
 
     // make sure SDL cleans up before exit
     atexit(SDL_Quit);
