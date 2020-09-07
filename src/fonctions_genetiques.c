@@ -21,15 +21,15 @@ Population first_Population(){
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0; i < TAILLE; i++)
+	for(uint16_t i = 0; i < TAILLE; i++)
 		population[i] = random_Individu();
 
 	return population;
 }
 
-Population evolution(Population original, int* rank){
+Population evolution(Population original, uint32_t* rank){
 
-	int kept = 0;
+	uint16_t kept = 0;
 
 	Population population = calloc(TAILLE, sizeof(Individu));
 
@@ -38,7 +38,7 @@ Population evolution(Population original, int* rank){
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0; i < TAILLE; i++){
+	for(uint16_t i = 0; i < TAILLE; i++){
 
 		if(rand() % TAILLE <= TAILLE * exp(-i)){
 
@@ -48,7 +48,7 @@ Population evolution(Population original, int* rank){
 		}
 	}
 
-	for( int i = kept; i < TAILLE; i++)
+	for( uint16_t i = kept; i < TAILLE; i++)
 		population[i] = wedding(population[rand() % kept], population[rand() % kept]);
 
 	mutation(population);
@@ -60,16 +60,16 @@ Population evolution(Population original, int* rank){
 
 Individu wedding(Individu pere, Individu mere){
 
-	return create_Individu( (int)pere.forward + (int)mere.forward,
-							(int)pere.right + (int)mere.right,
-							(int)pere.backward + (int)mere.backward,
-							(int)pere.left + (int)mere.left,
+	return create_Individu( (uint16_t)pere.forward + (uint16_t)mere.forward,
+							(uint16_t)pere.right + (uint16_t)mere.right,
+							(uint16_t)pere.backward + (uint16_t)mere.backward,
+							(uint16_t)pere.left + (uint16_t)mere.left,
 							( pere.direction + mere.direction ) / 2);
 }
 
 void mutation(Population population){
 
-	for(int i = 0; i < TAILLE; i++){
+	for(uint16_t i = 0; i < TAILLE; i++){
 		switch(rand() % MUTATION){
 			case 0:
 				population[i] = create_Individu(rand() % 255,
@@ -115,9 +115,9 @@ void mutation(Population population){
 
 Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Population population){
 
-	unsigned int* scores;
+	uint32_t* scores;
 
-	scores = calloc(TAILLE, sizeof(int));
+	scores = calloc(TAILLE, sizeof(uint32_t));
 
 	if(scores == NULL){
 		printf("Cannot create scores table");
@@ -126,11 +126,11 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 
 	Couple couple;
 
-	int min = LIMITE +1;										//Cela permet d'etre sur de tracer un chemin mais s'il n'est pas intéressant
+	uint32_t min = LIMITE +1;										//Cela permet d'etre sur de tracer un chemin mais s'il n'est pas intéressant
 
 	List chemin = create_List();
 
-	for(int i = 0; i < TAILLE; i++){
+	for(uint16_t i = 0; i < TAILLE; i++){
 
 		#ifdef DEBUG
 			if(i%10==0)printf("%d\n", i);
@@ -138,7 +138,7 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 
 		couple = life_simple(map, begin, end, population[i]);
 
-		scores[i] = int_of_void(couple.key);
+		scores[i] = int32_of_void(couple.key);
 
 		if(scores[i] < min){
 			min = scores[i];
@@ -159,7 +159,7 @@ Couple life_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Individu ind
 
 	List chemin = create_List();
 
-	int count = 0;
+	uint32_t count = 0;
 
 	while( !is_equal_Coordonnee(currentPosition, end) && count < LIMITE){
 		chemin = push_value_List( void_of_Coordonnee(currentPosition), chemin);
@@ -171,15 +171,15 @@ Couple life_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Individu ind
 
 	chemin = push_value_List( void_of_Coordonnee(currentPosition), chemin);
 
-	return create_Couple( void_of_int(count), chemin);
+	return create_Couple( void_of_int32(count), chemin);
 }
 
 Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu individu){
 
-	unsigned int x = currentPosition.x;				//Simplification des notations pour alleger le code
-	unsigned int y = currentPosition.y;
+	uint16_t x = currentPosition.x;				//Simplification des notations pour alleger le code
+	uint16_t y = currentPosition.y;
 
-	unsigned char resultat = rand() % 255;			//Resultat aléatoire que l'on va utiliser pour nos choix de direction
+	uint8_t resultat = rand() % 255;			//Resultat aléatoire que l'on va utiliser pour nos choix de direction
 
 	Coordonnee arrivee = currentPosition;
 
@@ -385,9 +385,9 @@ Couple resultat_genetique_simple(SimpleMap map, SDL_Renderer* renderer, SDL_Text
 
 	List chemin;
 
-	int min = LIMITE;
+	uint32_t min = LIMITE;
 
-	for(int i = 0; i < NB_GENERATION; i++){
+	for(uint16_t i = 0; i < NB_GENERATION; i++){
 
 		#ifdef DEBUG
 			printf("Génération : %d\n", i );
@@ -395,9 +395,9 @@ Couple resultat_genetique_simple(SimpleMap map, SDL_Renderer* renderer, SDL_Text
 
 		Couple couple = generation_simple(map, begin, end, population);
 
-		int* resultats = couple.key;
+		uint32_t* resultats = couple.key;
 
-		int* rank = sort(resultats, TAILLE, TAILLE-1);
+		uint32_t* rank = sort(resultats, TAILLE, TAILLE-1);
 
 		if(resultats[rank[0]] < min){
 			min = resultats[rank[0]];
@@ -426,6 +426,6 @@ Couple resultat_genetique_simple(SimpleMap map, SDL_Renderer* renderer, SDL_Text
 
 	}
 
-	return	create_Couple(chemin, void_of_int(min))	;
+	return	create_Couple(chemin, void_of_int32(min))	;
 
 }

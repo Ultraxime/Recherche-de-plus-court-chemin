@@ -27,7 +27,7 @@ List push_value_List(void*, List);
 
 void* pop_List(List*); 
 
-int len_List(List);
+uint32_t len_List(List);
 
 void clear_List(List);
 
@@ -39,7 +39,7 @@ bool is_empty_List(List);
 
 SimpleMap simpleMap_of_void(void*);
 
-void clear_SimpleMap(SimpleMap, int);
+void clear_SimpleMap(SimpleMap, uint16_t);
 
 
 
@@ -47,7 +47,7 @@ void clear_SimpleMap(SimpleMap, int);
 
 DrawableMap drawableMap_of_void(void*);
 
-void clear_DrawableMap(DrawableMap, int);
+void clear_DrawableMap(DrawableMap, uint16_t);
 
 
 
@@ -55,19 +55,19 @@ void clear_DrawableMap(DrawableMap, int);
 
 LongMap longMap_of_void(void*);
 
-void clear_LongMap(LongMap, int);
+void clear_LongMap(LongMap, uint16_t);
 
-unsigned long max_LongMap(LongMap, int, int);
+uint64_t max_LongMap(LongMap, uint16_t, uint16_t);
 
-unsigned long min_LongMap(LongMap, int, int);
+uint64_t min_LongMap(LongMap, uint16_t, uint16_t);
 
 
 
 //Operations sur les Coordonnee
 
-Coordonnee create_Coordonnee(unsigned int, unsigned int);
+Coordonnee create_Coordonnee(uint16_t, uint16_t);
 
-Coordonnee random_Coordonnee(unsigned int, unsigned int);
+Coordonnee random_Coordonnee(uint16_t, uint16_t);
 
 bool is_equal_Coordonnee(Coordonnee, Coordonnee);
 
@@ -79,7 +79,7 @@ void* void_of_Coordonnee(Coordonnee);
 
 //Operations sur les Individu
 
-Individu create_Individu(unsigned int, unsigned int, unsigned int, unsigned int, unsigned char);
+Individu create_Individu(uint16_t, uint16_t, uint16_t, uint16_t, uint8_t);
 
 Individu random_Individu();
 
@@ -87,7 +87,7 @@ Individu random_Individu();
 
 //Operations sur les Resultat
 
-Resultat create_Resultat(Population, unsigned int *, List*);
+Resultat create_Resultat(Population, uint32_t*, List*);
 
 
 
@@ -99,9 +99,9 @@ Couple create_Couple(void*, void*);
 
 //Operations sur les Graph
 
-Graph create_Graph(unsigned int);
+Graph create_Graph(uint32_t);
 
-void add_arrete(Graph*, unsigned int, unsigned int);
+void add_arrete(Graph*, uint32_t, uint32_t);
 
 
 
@@ -119,10 +119,13 @@ bool is_empty_Queue(Queue);
 
 //Operations sur les int
 
-int int_of_void(void*);
+uint16_t int16_of_void(void*);
 
-void* void_of_int(int);
+uint32_t int32_of_void(void*);
 
+void* void_of_int16(uint16_t);
+
+void* void_of_int32(uint32_t);
 
 
 #endif

@@ -9,7 +9,7 @@
 
 Population first_Population();
 
-Population evolution(Population, int*);
+Population evolution(Population, uint32_t*);
 
 Individu wedding(Individu, Individu);
 

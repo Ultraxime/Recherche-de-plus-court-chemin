@@ -9,7 +9,7 @@ SimpleMap simpleMap_from_DrawableMap(DrawableMap);
 
 DrawableMap bruit_Perlin_DrawableMap();
 
-DrawableMap random_DrawableMap(int, int, int, int);
+DrawableMap random_DrawableMap(uint16_t, uint16_t, uint16_t, uint16_t);
 
 Screen screen_from_DrawableMap(DrawableMap);
 

@@ -8,13 +8,13 @@
 
 bool init();
 
-List facteurs_premiers(int);
+List facteurs_premiers(uint16_t);
 
 void pause();
 
-int* sort(int*, int, int);
+uint32_t* sort(uint32_t*, uint16_t, uint16_t);
 
-Uint32 color(int, int, int);
+Uint32 color(uint8_t, uint8_t, uint8_t);
 
 void* interruption(void*);
 
