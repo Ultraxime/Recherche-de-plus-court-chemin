@@ -6,6 +6,8 @@
 
 #include "structures.h"
 
+extern List activeThread;	//List qui contient les threads actifs et généraux
+
 bool init();
 
 List facteurs_premiers(uint16_t);

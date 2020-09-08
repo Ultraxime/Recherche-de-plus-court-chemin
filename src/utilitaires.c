@@ -8,11 +8,11 @@
 #include "utilitaires_structures.h"
 #include "errors.h"
 
-List activeThread = NULL;
-
 bool init(){
 
 	srand(time(NULL));					//Initialisation pour l'algorithme de random
+
+	activeThread = create_List();
 
 	if ( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {
