@@ -28,10 +28,14 @@ void arg_parser(int argc, char** argv) {
 
     while (true) {
 	static struct option options[] = {
-	    {"help", 		no_argument, 		0, 'h'},
-	    {"nb-mutation", 	required_argument, 	0, 'm'}
+	    {"help", 			no_argument, 		0, 'h'},
+	    {"nb-generation", 		required_argument, 	0, 'g'},
+	    {"altitude", 		required_argument,	0, 'a'},
+	    {"population-size", 	required_argument, 	0, 'p'},
+	    {"mutation-probability",	required_argument,	0, 'm'}
 	};
-	opt_val = getopt_long(argc, argv, "hm:", options, NULL);
+
+	opt_val = getopt_long(argc, argv, "hg:a:p:m:", options, NULL);
 
 	// No more options
 	if (opt_val == -1) {
@@ -43,8 +47,17 @@ void arg_parser(int argc, char** argv) {
 		help(argv[0]);
 		exit(0);
 		break;
-	    case 'm' :
+	    case 'g' :
 		nb_generation = atoi(optarg);
+		break;
+	    case 'a':
+		altitude = atoi(optarg);
+		break;
+	    case 'p':
+		population_size = atoi(optarg);
+		break;
+	    case 'm':
+		mutation_probability = atoi(optarg);
 		break;
 	    default:
 		help(argv[0]);
@@ -64,10 +77,17 @@ void arg_parser(int argc, char** argv) {
  *********************************************************
 */
 void help(char* exe_name) {
-    printf("USAGE: %s [-h] [-m nb_mutatations]\n\n", exe_name);
-    printf("Options:\n");
-    printf("--help | -h : Print this help message\n");
-    printf("--nb-mutation | -m <nb_mutatations> : Change the number of mutations. (Default : 100)\n");
+    printf("USAGE: %s [-h] [-g nb_mutations] [-a altitude] [-p population_size] [-m mutation_probability]\n\n", exe_name);
+    puts("Options:");
+    puts(LONG_OPTION_COLOR "	--help" COLOR_RESET " | " SHORT_OPTION_COLOR "-h" COLOR_RESET " : Print this help message");
+    puts(LONG_OPTION_COLOR "	--nb-generation" COLOR_RESET " | " SHORT_OPTION_COLOR "-g" COLOR_RESET " <nb_mutatations> : Change the number of generation. "
+	    DEFAULT_VALUE_COLOR "(Default : 100)" COLOR_RESET);
+    puts(LONG_OPTION_COLOR "	--altitude" COLOR_RESET " | " SHORT_OPTION_COLOR "-a" COLOR_RESET " <altitude> : Change the altitude. " 
+	    DEFAULT_VALUE_COLOR "(Default : 127 - Max : 255)" COLOR_RESET);
+    puts(LONG_OPTION_COLOR "	--population-size" COLOR_RESET " | " SHORT_OPTION_COLOR "-p" COLOR_RESET " <population_size> : Change the size of the population. " 
+	    DEFAULT_VALUE_COLOR "(Default : 1000)" COLOR_RESET);
+    puts(LONG_OPTION_COLOR "	--mutation-probability" COLOR_RESET " | " SHORT_OPTION_COLOR "-m" COLOR_RESET " <mutation_probability> : Change the probability of mutation " 
+	    DEFAULT_VALUE_COLOR "(Default : 100000)" COLOR_RESET);
 }
 
 bool init(){

@@ -9,6 +9,8 @@
 #include "errors.h"
 #include "constantes.h"
 
+uint8_t altitude = DEFAULT_ALTITUDE;
+
 SimpleMap simpleMap_from_DrawableMap(DrawableMap origin){
 
 	SimpleMap map = NULL;
@@ -31,7 +33,7 @@ SimpleMap simpleMap_from_DrawableMap(DrawableMap origin){
 
 		for(int j = 0 ; j < M ; j++)
 
-			map[i][j] = origin[i][j] > H;			//si l'altitude le permet cette case represente de la terre, de la mer sinon
+			map[i][j] = origin[i][j] > altitude;			//si l'altitude le permet cette case represente de la terre, de la mer sinon
 	}
 
 	return map;
@@ -285,27 +287,27 @@ void draw_DrawableMap(DrawableMap map, SDL_Surface* screen, Coordonnee begin, Co
 
     	for(int j = 0; j < M; j++){
 
-    		if(map[i][j] < H / 4){
+    		if(map[i][j] < altitude / 4){
     			
     			pixels[j*N + i] = darkBlue;
     		
-    		}else if(map[i][j] < (3 * (unsigned int) H ) / 4){
+    		}else if(map[i][j] < (3 * (unsigned int) altitude ) / 4){
 
     			pixels[j*N + i] = blue;
 
-    		}else if(map[i][j] < H){
+    		}else if(map[i][j] < altitude){
 
     			pixels[j*N + i] = lightBlue;
 
-    		}else if(map[i][j] > 255 - (255 - H) / 8){
+    		}else if(map[i][j] > 255 - (255 - altitude) / 8){
 
     			pixels[j*N + i] = brown;
     			
-    		}else if(map[i][j] > 255 - (255 - H) / 2){
+    		}else if(map[i][j] > 255 - (255 - altitude) / 2){
 
     			pixels[j*N + i] = orange;
     			
-    		}else if(map[i][j] > 255 - (3 * (unsigned int) (255 - H) ) / 4){
+    		}else if(map[i][j] > 255 - (3 * (unsigned int) (255 - altitude) ) / 4){
 
     			pixels[j*N + i] = lightOrange;
     			

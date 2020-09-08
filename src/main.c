@@ -12,7 +12,6 @@
 int main(int argc, char** argv){
 
 	arg_parser(argc, argv);
-	// exit(1);
 
 	if(!init()){
 		printf("Error during initialization");
@@ -35,14 +34,14 @@ int main(int argc, char** argv){
 
 	begin  = random_Coordonnee(N, M);
 
-	while( map[begin.x][begin.y] >= H)									//On ne peut debuter sur la terre
+	while( map[begin.x][begin.y] >= altitude)									//On ne peut debuter sur la terre
 		begin = random_Coordonnee(N, M);
 
 	Coordonnee end;
 
 	end = random_Coordonnee(N, M);
 
-	while( map[end.x][end.y] >=H || is_equal_Coordonnee(begin, end))	//On ne peut finir sur terre et avoir un debut egal a une fin n'a pas d'interet
+	while( map[end.x][end.y] >=altitude || is_equal_Coordonnee(begin, end))	//On ne peut finir sur terre et avoir un debut egal a une fin n'a pas d'interet
 		end = random_Coordonnee(N, M);
 
 

@@ -11,6 +11,8 @@
 
 /* Global vars for args */
 uint16_t nb_generation = DEFAULT_NB_GENERATION;
+uint16_t population_size = DEFAULT_POP_SIZE;
+uint32_t mutation_probability = DEFAULT_MUTATION_PROBABILITY;
 
 void set_nb_generation(uint32_t new_value) {
     nb_generation = new_value;
@@ -20,14 +22,14 @@ Population first_Population(){
 
 	Population population;
 
-	population = malloc(TAILLE * sizeof(Individu));
+	population = malloc(population_size * sizeof(Individu));
 
 	if(population == NULL){
 		printf("Cannot create the first population");
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0; i < TAILLE; i++)
+	for(int i = 0; i < population_size; i++)
 		population[i] = random_Individu();
 
 	return population;
@@ -37,16 +39,16 @@ Population evolution(Population original, int* rank){
 
 	int kept = 0;
 
-	Population population = malloc(TAILLE * sizeof(Individu));
+	Population population = malloc(population_size * sizeof(Individu));
 
 	if(population == NULL){
 		printf("Cannot create the new population");
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0; i < TAILLE; i++){
+	for(int i = 0; i < population_size; i++){
 
-		if(rand() % TAILLE <= TAILLE * exp(-i)){
+		if(rand() % population_size <= population_size * exp(-i)){
 
 			population[kept] = original[i];
 
@@ -54,7 +56,7 @@ Population evolution(Population original, int* rank){
 		}
 	}
 
-	for( int i = kept; i < TAILLE; i++)
+	for( int i = kept; i < population_size; i++)
 		population[i] = wedding(population[rand() % kept], population[rand() % kept]);
 
 	mutation(population);
@@ -75,8 +77,8 @@ Individu wedding(Individu pere, Individu mere){
 
 void mutation(Population population){
 
-	for(int i = 0; i < TAILLE; i++){
-		switch(rand() % MUTATION){
+	for(int i = 0; i < population_size; i++){
+		switch(rand() % mutation_probability){
 			case 0:
 				population[i] = create_Individu(rand() % 255,
 												population[i].right,
@@ -123,7 +125,7 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 
 	unsigned int* scores;
 
-	scores = malloc(TAILLE * sizeof(int));
+	scores = malloc(population_size * sizeof(int));
 
 	if(scores == NULL){
 		printf("Cannot create scores table");
@@ -136,7 +138,7 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 
 	List chemin = create_List();
 
-	for(int i = 0; i < TAILLE; i++){
+	for(int i = 0; i < population_size; i++){
 
 		if(i%10==0)printf("%d\n", i);
 
@@ -398,7 +400,7 @@ Couple resultat_genetique_simple(SimpleMap map, Coordonnee begin, Coordonnee end
 
 		int* resultats = couple.key;
 
-		int* rank = sort(resultats, TAILLE, TAILLE-1);
+		int* rank = sort(resultats, population_size, population_size-1);
 
 		if(resultats[rank[0]] < min){
 			min = resultats[rank[0]];
