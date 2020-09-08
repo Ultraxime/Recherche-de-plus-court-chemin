@@ -8,6 +8,8 @@
 #include "utilitaires_structures.h"
 #include "errors.h"
 
+List activeThread;
+
 bool init(){
 
 	srand(time(NULL));					//Initialisation pour l'algorithme de random
