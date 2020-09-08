@@ -34,7 +34,7 @@ bool init(){
     }
 
     if( try == 0 ){
-    	printf("Failled to start the thread for interruption");
+    	printf("Failed to start the thread for interruption");
     	exit(THREAD_ERROR);
     }else{
     	push_value_List( void_of_pthread(interruptionT), activeThread);
@@ -147,11 +147,17 @@ void* interruption(void* arg){
 					end = false;
 					break;
 
+				case SDL_KEYDOWN:
+					if( event.key.keysym.mod == KMOD_LCTRL || event.key.keysym.mod == KMOD_RCTRL )		//Si une touche CTRL est préssée
+						if( event.key.keysym.sym == SDLK_c )										//Si la touche C est pressée
+							end = false;
 				default :
 					break;
 			}
 		}
 	}
+
+	printf("Le programme c'est arrete sur demande de l'operateur\n");
 
 	exit(INTERRUPTION_ERROR);
 
