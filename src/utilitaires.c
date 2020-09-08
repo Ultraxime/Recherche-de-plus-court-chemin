@@ -23,24 +23,17 @@
  *********************************************************
 */
 void arg_parser(int argc, char** argv) {
-    
-    int32_t opt_val;
-
-    while (true) {
-	static struct option options[] = {
+ 
+    static struct option options[] = {
 	    {"help", 			no_argument, 		0, 'h'},
 	    {"nb-generation", 		required_argument, 	0, 'g'},
 	    {"altitude", 		required_argument,	0, 'a'},
 	    {"population-size", 	required_argument, 	0, 'p'},
 	    {"mutation-probability",	required_argument,	0, 'm'}
 	};
+   int32_t opt_val = getopt_long(argc, argv, "hg:a:p:m:", options, NULL);
 
-	opt_val = getopt_long(argc, argv, "hg:a:p:m:", options, NULL);
-
-	// No more options
-	if (opt_val == -1) {
-	    break;
-	}
+    while (opt_val != -1) {
 
 	switch (opt_val) {
 	    case 'h' :
@@ -64,6 +57,7 @@ void arg_parser(int argc, char** argv) {
 		exit(1);
 		break;
 	}
+	opt_val = getopt_long(argc, argv, "hg:a:p:m:", options, NULL);
     }
 }
 
@@ -77,8 +71,8 @@ void arg_parser(int argc, char** argv) {
  *********************************************************
 */
 void help(char* exe_name) {
-    printf("USAGE: %s [-h] [-g nb_mutations] [-a altitude] [-p population_size] [-m mutation_probability]\n\n", exe_name);
-    puts("Options:");
+    printf(BOLD "\nUSAGE" COLOR_RESET ": %s [-h] [-g nb_mutations] [-a altitude] [-p population_size] [-m mutation_probability]\n\n", exe_name);
+    puts(BOLD "Options" COLOR_RESET ":");
     puts(LONG_OPTION_COLOR "	--help" COLOR_RESET " | " SHORT_OPTION_COLOR "-h" COLOR_RESET " : Print this help message");
     puts(LONG_OPTION_COLOR "	--nb-generation" COLOR_RESET " | " SHORT_OPTION_COLOR "-g" COLOR_RESET " <nb_mutatations> : Change the number of generation. "
 	    DEFAULT_VALUE_COLOR "(Default : 100)" COLOR_RESET);
@@ -88,6 +82,7 @@ void help(char* exe_name) {
 	    DEFAULT_VALUE_COLOR "(Default : 1000)" COLOR_RESET);
     puts(LONG_OPTION_COLOR "	--mutation-probability" COLOR_RESET " | " SHORT_OPTION_COLOR "-m" COLOR_RESET " <mutation_probability> : Change the probability of mutation " 
 	    DEFAULT_VALUE_COLOR "(Default : 100000)" COLOR_RESET);
+    puts("");	// Empty line between the end of the help and the shell line
 }
 
 bool init(){
