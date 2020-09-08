@@ -128,4 +128,10 @@ void* void_of_int16(uint16_t);
 void* void_of_int32(uint32_t);
 
 
+//Operations sur les pthread_t
+
+pthread_t pthread_of_void(void*);
+
+void* void_of_pthread(pthread_t);
+
 #endif

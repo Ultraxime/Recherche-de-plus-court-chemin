@@ -18,6 +18,6 @@ Uint32 color(uint8_t, uint8_t, uint8_t);
 
 void* interruption(void*);
 
-void cleaning_thread();
+void kill_all_threads();
 
 #endif

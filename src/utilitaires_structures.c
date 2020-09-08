@@ -421,3 +421,16 @@ void* void_of_int32(uint32_t n){
 
 	return *( (void**) &n );
 }
+
+
+//Operations sur les pthread_t
+
+pthread_t pthread_of_void(void* thread){
+
+	return *( (pthread_t*) &thread );
+}
+
+void* void_of_pthread(pthread_t thread){
+
+	return *( (void**) &thread );
+}

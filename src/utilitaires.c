@@ -8,6 +8,8 @@
 #include "utilitaires_structures.h"
 #include "errors.h"
 
+List activeThread = NULL;
+
 bool init(){
 
 	srand(time(NULL));					//Initialisation pour l'algorithme de random
@@ -17,6 +19,9 @@ bool init(){
         printf( "Unable to init SDL: %s\n", SDL_GetError() );
         return false;
     }
+
+    // make sure SDL cleans up before exit
+    atexit(SDL_Quit);
 
     pthread_t interruptionT;
 
@@ -28,12 +33,16 @@ bool init(){
     	try --;
     }
 
+    if( try == 0 ){
+    	printf("Failled to start the thread for interruption");
+    	exit(THREAD_ERROR);
+    }else{
+    	push_value_List( void_of_pthread(interruptionT), activeThread);
+    }
 
-    // make sure SDL cleans up before exit
-    atexit(SDL_Quit);
 
     // make sure all thread are shut down before exit
-    atexit(cleaning_thread);
+    atexit(kill_all_threads);
 
 	return true;    
 }
@@ -149,13 +158,10 @@ void* interruption(void* arg){
 	pthread_exit(NULL);
 }
 
-void cleaning_thread(){
+void kill_all_threads(){
 
-	pthread_t current = pthread_self();
+	while( !is_empty_List(activeThread) ){
 
-	for(pthread_t i = 0; i <= 1024; i++)
-
-		if(i != current)
-			
-			pthread_cancel(i);
+		pthread_cancel( pthread_of_void( pop_List( &activeThread ) ) );
+	}
 }
