@@ -204,7 +204,7 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 				break;
 
 			case 1:							//On pointe vers l'est
-				if( x < N-1 && !map[x+1][y] ){
+				if( x < map_width-1 && !map[x+1][y] ){
 
 					arrivee = create_Coordonnee(x+1, y);
 
@@ -212,7 +212,7 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 				break;
 
 			case 2:							//On pointe vers le sud
-				if( y < M-1 && !map[x][y+1] ){
+				if( y < map_height-1 && !map[x][y+1] ){
 
 					arrivee = create_Coordonnee(x, y+1);
 
@@ -239,7 +239,7 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 
 			switch( individu.direction ){
 				case 0:							//On pointe vers le nord
-					if( x < N-1 && !map[x+1][y] ){
+					if( x < map_width-1 && !map[x+1][y] ){
 
 						arrivee = create_Coordonnee(x+1, y);
 
@@ -249,7 +249,7 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 					break;
 
 				case 1:							//On pointe vers l'est
-					if( y < M-1 && !map[x][y+1] ){
+					if( y < map_height-1 && !map[x][y+1] ){
 
 						arrivee = create_Coordonnee(x, y+1);
 
@@ -289,7 +289,7 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 
 				switch( individu.direction ){
 					case 0:							//On pointe vers le nord
-						if( y < M-1 && !map[x][y+1] ){
+						if( y < map_height-1 && !map[x][y+1] ){
 
 							arrivee = create_Coordonnee(x, y+1);
 
@@ -319,7 +319,7 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 						break;
 
 					case 3:							//On pointe vers l'ouest
-						if( x < N-1 && !map[x+1][y] ){
+						if( x < map_width-1 && !map[x+1][y] ){
 
 							arrivee = create_Coordonnee(x+1, y);
 
@@ -357,7 +357,7 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 						break;
 
 					case 2:							//On pointe vers le sud
-						if( x < N-1 && !map[x+1][y] ){
+						if( x < map_width-1 && !map[x+1][y] ){
 
 							arrivee = create_Coordonnee(x+1, y);
 
@@ -367,7 +367,7 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 						break;
 
 					case 3:							//On pointe vers l'ouest
-						if( y < M-1 && !map[x][y+1] ){
+						if( y < map_height-1 && !map[x][y+1] ){
 
 							arrivee = create_Coordonnee(x, y+1);
 

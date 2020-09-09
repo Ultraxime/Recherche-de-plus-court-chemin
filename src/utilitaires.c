@@ -4,6 +4,7 @@
 #include <SDL/SDL.h>
 #include <getopt.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "structures.h"
 #include "utilitaires.h"
@@ -11,6 +12,8 @@
 #include "errors.h"
 #include "constantes.h"
 #include "fonctions_genetiques.h"
+
+bool verbose = false;
 
 /*
  ********************************************************
@@ -26,12 +29,13 @@ void arg_parser(int argc, char** argv) {
  
     static struct option options[] = {
 	    {"help", 			no_argument, 		0, 'h'},
+	    {"verbose",			no_argument,		0, 'v'},
 	    {"nb-generation", 		required_argument, 	0, 'g'},
 	    {"altitude", 		required_argument,	0, 'a'},
 	    {"population-size", 	required_argument, 	0, 'p'},
 	    {"mutation-probability",	required_argument,	0, 'm'}
 	};
-   int32_t opt_val = getopt_long(argc, argv, "hg:a:p:m:", options, NULL);
+   int32_t opt_val = getopt_long(argc, argv, "hvg:a:p:m:", options, NULL);
 
     while (opt_val != -1) {
 
@@ -39,6 +43,9 @@ void arg_parser(int argc, char** argv) {
 	    case 'h' :
 		help(argv[0]);
 		exit(0);
+		break;
+	    case 'v' :
+		verbose = true;
 		break;
 	    case 'g' :
 		nb_generation = atoi(optarg);
@@ -57,7 +64,7 @@ void arg_parser(int argc, char** argv) {
 		exit(1);
 		break;
 	}
-	opt_val = getopt_long(argc, argv, "hg:a:p:m:", options, NULL);
+	opt_val = getopt_long(argc, argv, "hvg:a:p:m:", options, NULL);
     }
 }
 
@@ -73,7 +80,8 @@ void arg_parser(int argc, char** argv) {
 void help(char* exe_name) {
     printf(BOLD "\nUSAGE" COLOR_RESET ": %s [-h] [-g nb_mutations] [-a altitude] [-p population_size] [-m mutation_probability]\n\n", exe_name);
     puts(BOLD "Options" COLOR_RESET ":");
-    puts(LONG_OPTION_COLOR "	--help" COLOR_RESET " | " SHORT_OPTION_COLOR "-h" COLOR_RESET " : Print this help message");
+    puts(LONG_OPTION_COLOR "	--help" COLOR_RESET " | " SHORT_OPTION_COLOR "-h" COLOR_RESET " : Print this help message.");
+    puts(LONG_OPTION_COLOR "	--verbose" COLOR_RESET " | " SHORT_OPTION_COLOR "-v" COLOR_RESET " : Print more information during the execution of the software.");
     puts(LONG_OPTION_COLOR "	--nb-generation" COLOR_RESET " | " SHORT_OPTION_COLOR "-g" COLOR_RESET " <nb_mutatations> : Change the number of generation. "
 	    DEFAULT_VALUE_COLOR "(Default : 100)" COLOR_RESET);
     puts(LONG_OPTION_COLOR "	--altitude" COLOR_RESET " | " SHORT_OPTION_COLOR "-a" COLOR_RESET " <altitude> : Change the altitude. " 

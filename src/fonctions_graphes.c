@@ -10,17 +10,17 @@
 
 Graph graph_of_SimpleMap(SimpleMap map){
 
-	Graph graph = create_Graph( N * M );
+	Graph graph = create_Graph( map_width * map_height );
 
-	for(int i = 0; i < N; i++){
+	for (uint16_t i = 0; i < map_width; i++) {
 
-		for(int j = 0; j < M; j++){
+		for (uint16_t j = 0; j < map_height; j++) {
 
-			if(!map[i][j]){
-				if( i > 0 && !map[i-1][j]) add_arrete(&graph, i*N + j, (i-1)*N + j);
-				if( j > 0 && !map[i][j-1]) add_arrete(&graph, i*N + j, i*N + j - 1);
-				if( i < N-1 && !map[i+1][j]) add_arrete(&graph, i*N + j, (i+1)*N + j);
-				if( i < M-1 && !map[i][j+1]) add_arrete(&graph, i*N + j, i*N + j + 1);
+			if (!map[i][j]) {
+				if( i > 0 && !map[i-1][j]) add_arrete(&graph, i*map_width + j, (i-1)*map_width + j);
+				if( j > 0 && !map[i][j-1]) add_arrete(&graph, i*map_width + j, i*map_width + j - 1);
+				if( i < map_width-1 && !map[i+1][j]) add_arrete(&graph, i*map_width + j, (i+1)*map_width + j);
+				if( i < map_height-1 && !map[i][j+1]) add_arrete(&graph, i*map_width + j, i*map_width + j + 1);
 			}
 		}
 	}
@@ -30,8 +30,8 @@ Graph graph_of_SimpleMap(SimpleMap map){
 
 Couple resultat_graphe_simple(SimpleMap map, Coordonnee coordonneeBegin, Coordonnee coordonneeEnd){
 
-	unsigned int begin = coordonneeBegin.x * N + coordonneeBegin.y;
-	unsigned int end = coordonneeEnd.x * N + coordonneeEnd.y;
+	unsigned int begin = coordonneeBegin.x * map_width + coordonneeBegin.y;
+	unsigned int end = coordonneeEnd.x * map_width + coordonneeEnd.y;
 
 	Graph graph = graph_of_SimpleMap(map);
 
