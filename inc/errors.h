@@ -15,4 +15,8 @@
 
 #define SWITCH_ERROR -7
 
+#define INTERRUPTION_ERROR -8
+
+#define THREAD_ERROR -9
+
 #endif

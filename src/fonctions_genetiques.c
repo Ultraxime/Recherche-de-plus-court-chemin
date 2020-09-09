@@ -22,31 +22,31 @@ Population first_Population(){
 
 	Population population;
 
-	population = malloc(population_size * sizeof(Individu));
+	population = calloc(population_size, sizeof(Individu));
 
 	if(population == NULL){
 		printf("Cannot create the first population");
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0; i < population_size; i++)
+	for (uint16_t i = 0; i < population_size; i++)
 		population[i] = random_Individu();
 
 	return population;
 }
 
-Population evolution(Population original, int* rank){
+Population evolution(Population original, uint32_t* rank){
 
-	int kept = 0;
+	uint16_t kept = 0;
 
-	Population population = malloc(population_size * sizeof(Individu));
+	Population population = calloc(population_size, sizeof(Individu));
 
 	if(population == NULL){
 		printf("Cannot create the new population");
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0; i < population_size; i++){
+	for(uint16_t i = 0; i < population_size; i++){
 
 		if(rand() % population_size <= population_size * exp(-i)){
 
@@ -56,7 +56,7 @@ Population evolution(Population original, int* rank){
 		}
 	}
 
-	for( int i = kept; i < population_size; i++)
+	for( uint16_t i = kept; i < population_size; i++)
 		population[i] = wedding(population[rand() % kept], population[rand() % kept]);
 
 	mutation(population);
@@ -68,16 +68,16 @@ Population evolution(Population original, int* rank){
 
 Individu wedding(Individu pere, Individu mere){
 
-	return create_Individu( (int)pere.forward + (int)mere.forward,
-							(int)pere.right + (int)mere.right,
-							(int)pere.backward + (int)mere.backward,
-							(int)pere.left + (int)mere.left,
+	return create_Individu( (uint16_t)pere.forward + (uint16_t)mere.forward,
+							(uint16_t)pere.right + (uint16_t)mere.right,
+							(uint16_t)pere.backward + (uint16_t)mere.backward,
+							(uint16_t)pere.left + (uint16_t)mere.left,
 							( pere.direction + mere.direction ) / 2);
 }
 
 void mutation(Population population){
 
-	for(int i = 0; i < population_size; i++){
+	for(uint16_t i = 0; i < population_size; i++){
 		switch(rand() % mutation_probability){
 			case 0:
 				population[i] = create_Individu(rand() % 255,
@@ -123,9 +123,9 @@ void mutation(Population population){
 
 Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Population population){
 
-	unsigned int* scores;
+	uint32_t* scores;
 
-	scores = malloc(population_size * sizeof(int));
+	scores = calloc(population_size, sizeof(uint32_t));
 
 	if(scores == NULL){
 		printf("Cannot create scores table");
@@ -134,22 +134,22 @@ Couple generation_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Popula
 
 	Couple couple;
 
-	int min = LIMITE;
+	uint32_t min = LIMITE +1;										//Cela permet d'etre sur de tracer un chemin mais s'il n'est pas intéressant
 
 	List chemin = create_List();
 
-	for(int i = 0; i < population_size; i++){
+	for(uint16_t i = 0; i < population_size; i++){
 
-		if(i%10==0)printf("%d\n", i);
+		#ifdef DEBUG
+			if(i%10==0)printf("%d\n", i);
+		#endif
 
 		couple = life_simple(map, begin, end, population[i]);
 
-		scores[i] = int_of_void(couple.key);
+		scores[i] = int32_of_void(couple.key);
 
 		if(scores[i] < min){
 			min = scores[i];
-
-			printf("%d\n", min);
 
 			clear_List(chemin);
 			chemin = list_of_void(couple.value);
@@ -167,7 +167,7 @@ Couple life_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Individu ind
 
 	List chemin = create_List();
 
-	int count = 0;
+	uint32_t count = 0;
 
 	while( !is_equal_Coordonnee(currentPosition, end) && count < LIMITE){
 		chemin = push_value_List( void_of_Coordonnee(currentPosition), chemin);
@@ -179,15 +179,15 @@ Couple life_simple(SimpleMap map, Coordonnee begin, Coordonnee end, Individu ind
 
 	chemin = push_value_List( void_of_Coordonnee(currentPosition), chemin);
 
-	return create_Couple( void_of_int(count), chemin);
+	return create_Couple( void_of_int32(count), chemin);
 }
 
 Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu individu){
 
-	unsigned int x = currentPosition.x;				//Simplification des notations pour alleger le code
-	unsigned int y = currentPosition.y;
+	uint16_t x = currentPosition.x;				//Simplification des notations pour alleger le code
+	uint16_t y = currentPosition.y;
 
-	unsigned char resultat = rand() % 255;			//Resultat aléatoire que l'on va utiliser pour nos choix de direction
+	uint8_t resultat = rand() % 255;			//Resultat aléatoire que l'on va utiliser pour nos choix de direction
 
 	Coordonnee arrivee = currentPosition;
 
@@ -387,20 +387,25 @@ Coordonnee next_step_simple(SimpleMap map, Coordonnee currentPosition, Individu 
 }
 
 
-Couple resultat_genetique_simple(SimpleMap map, Coordonnee begin, Coordonnee end, SDL_Surface* screen){
+Couple resultat_genetique_simple(SimpleMap map, SDL_Renderer* renderer, SDL_Texture* texture, Coordonnee begin, Coordonnee end){
 
 	Population population = first_Population();
 
 	List chemin;
 
-	int min = LIMITE;
+	uint32_t min = LIMITE;
 
-	for(uint32_t i = 0; i < nb_generation; i++){
+	for(uint16_t i = 0; i < nb_generation; i++){
+
+		#ifdef DEBUG
+			printf("Génération : %d\n", i );
+		#endif
+
 		Couple couple = generation_simple(map, begin, end, population);
 
-		int* resultats = couple.key;
+		uint32_t* resultats = couple.key;
 
-		int* rank = sort(resultats, population_size, population_size-1);
+		uint32_t* rank = sort(resultats, population_size, population_size-1);
 
 		if(resultats[rank[0]] < min){
 			min = resultats[rank[0]];
@@ -408,8 +413,15 @@ Couple resultat_genetique_simple(SimpleMap map, Coordonnee begin, Coordonnee end
 			clear_List(chemin);
 			chemin = list_of_void(couple.value);
 
-			draw_SimpleMap(map, screen, begin, end);
-			draw_way(chemin, screen);
+			Screen pixels = screen_from_SimpleMap(map);
+			draw_coordonnee(begin, pixels, color(255, 255, 255));
+			draw_coordonnee(end, pixels, color(0, 0, 0));
+			draw_way(chemin, pixels);
+
+			show(renderer, texture, pixels);
+
+			free(pixels);
+			
 		}else{
 			clear_List(list_of_void(couple.value));
 		}
@@ -422,6 +434,6 @@ Couple resultat_genetique_simple(SimpleMap map, Coordonnee begin, Coordonnee end
 
 	}
 
-	return	create_Couple(chemin, void_of_int(min))	;
+	return	create_Couple(chemin, void_of_int32(min))	;
 
 }

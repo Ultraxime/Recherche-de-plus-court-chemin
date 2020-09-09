@@ -105,7 +105,7 @@ void* pop_List(List* list){
 	return result;
 }
 
-int len_List(List list){
+uint32_t len_List(List list){
 
 	if(list == NULL)
 		return 0;
@@ -150,9 +150,9 @@ SimpleMap simpleMap_of_void(void* map){
 	return *((SimpleMap*)&map);
 }
 
-void clear_SimpleMap(SimpleMap map, int n){
+void clear_SimpleMap(SimpleMap map, uint16_t n){
 
-	for(int i = 0; i<n; i++)
+	for(uint16_t i = 0; i<n; i++)
 		free(map[i]);
 
 	free(map);
@@ -166,9 +166,9 @@ DrawableMap drawableMap_of_void(void* map){
 	return *((DrawableMap*)&map);
 }
 
-void clear_DrawableMap(DrawableMap map, int n){
+void clear_DrawableMap(DrawableMap map, uint16_t n){
 
-	for(int i = 0; i<n; i++)
+	for(uint16_t i = 0; i<n; i++)
 		free(map[i]);
 
 	free(map);
@@ -182,21 +182,21 @@ LongMap longMap_of_void(void* map){
 	return *( (LongMap*) &map );
 }
 
-void clear_LongMap(LongMap map, int n){
+void clear_LongMap(LongMap map, uint16_t n){
 
-	for(int i = 0; i < n; i++)
+	for(uint16_t i = 0; i < n; i++)
 
 		free(map[i]);
 
 	free(map);
 }
 
-unsigned long max_LongMap(LongMap map, int n, int m){
+uint64_t max_LongMap(LongMap map, uint16_t n, uint16_t m){
 
-	unsigned long max = map[0][0];
+	uint64_t max = map[0][0];
 
-	for(int i = 0; i < n; i++)
-		for(int j = 0; j < m; j++)
+	for(uint16_t i = 0; i < n; i++)
+		for(uint16_t j = 0; j < m; j++)
 			if(max < map[i][j])
 				max = map[i][j];
 
@@ -204,12 +204,12 @@ unsigned long max_LongMap(LongMap map, int n, int m){
 
 }
 
-unsigned long min_LongMap(LongMap map, int n, int m){
+uint64_t min_LongMap(LongMap map, uint16_t n, uint16_t m){
 
-	unsigned long min = map[0][0];
+	uint64_t min = map[0][0];
 
-	for(int i = 0; i < n; i++)
-		for(int j = 0; j < m; j++)
+	for(uint16_t i = 0; i < n; i++)
+		for(uint16_t j = 0; j < m; j++)
 			if(min > map[i][j])
 				min = map[i][j];
 
@@ -220,7 +220,7 @@ unsigned long min_LongMap(LongMap map, int n, int m){
 
 //Operations sur les Coordonnee
 
-Coordonnee create_Coordonnee(unsigned int x, unsigned int y){
+Coordonnee create_Coordonnee(uint16_t x, uint16_t y){
 	
 	Coordonnee coord;
 	
@@ -230,7 +230,7 @@ Coordonnee create_Coordonnee(unsigned int x, unsigned int y){
 	return coord;
 }
 
-Coordonnee random_Coordonnee(unsigned int n, unsigned int m){
+Coordonnee random_Coordonnee(uint16_t n, uint16_t m){
 
 	return create_Coordonnee( rand() % n, rand() % m);
 }
@@ -253,15 +253,15 @@ void* void_of_Coordonnee(Coordonnee coordonnee){
 
 //Operations sur les Individu
 
-Individu create_Individu( unsigned int forward,
-						  unsigned int right,
-					 	  unsigned int backward,
-						  unsigned int left,
-						  unsigned char direction){
+Individu create_Individu( uint16_t forward,
+						  uint16_t right,
+					 	  uint16_t backward,
+						  uint16_t left,
+						  uint8_t direction){
 
 	Individu individu;
 
-	unsigned int total = forward + right + backward + left;
+	uint16_t total = forward + right + backward + left;
 
 	individu.forward = ( forward * 255 ) / total;
 	individu.right = ( right * 255 ) / total;
@@ -286,7 +286,7 @@ Individu random_Individu(){
 //Operations sur les Resultat
 
 Resultat create_Resultat(Population population,
-						unsigned int* scores,
+						uint32_t* scores,
 						List* chemins){
 
 	Resultat resultat;
@@ -315,28 +315,28 @@ Couple create_Couple(void* key, void* value){
 
 //Operations sur les Graph
 
-Graph create_Graph(unsigned int n){
+Graph create_Graph(uint32_t n){
 
 	Graph graph;
 
 	graph.n = n;
 
-	graph.arretes = malloc(n * sizeof(List));
+	graph.arretes = calloc(n, sizeof(List));
 
 	if(graph.arretes == NULL){
 		printf("Cannot create the graph");
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0; i < n; i++)
+	for(uint32_t i = 0; i < n; i++)
 		graph.arretes[i] = create_List();
 
 	return graph;
 }
 
-void add_arrete(Graph* graph, unsigned int i, unsigned int j){
+void add_arrete(Graph* graph, uint32_t i, uint32_t j){
 
-	graph->arretes[i] = push_value_List(void_of_int(j), graph->arretes[i]);
+	graph->arretes[i] = push_value_List(void_of_int32(j), graph->arretes[i]);
 }
 
 
@@ -402,12 +402,35 @@ bool is_empty_Queue(Queue queue){
 
 //Operations sur les int
 
-int int_of_void(void* n){
+uint16_t int16_of_void(void* n){
 
-	return *( (int*) &n );
+	return *( (uint16_t*) &n );
 }
 
-void* void_of_int(int n){
+uint32_t int32_of_void(void* n){
+
+	return *( (uint32_t*) &n );
+}
+
+void* void_of_int16(uint16_t n){
 
 	return *( (void**) &n );
+}
+
+void* void_of_int32(uint32_t n){
+
+	return *( (void**) &n );
+}
+
+
+//Operations sur les pthread_t
+
+pthread_t pthread_of_void(void* thread){
+
+	return *( (pthread_t*) &thread );
+}
+
+void* void_of_pthread(pthread_t thread){
+
+	return *( (void**) &thread );
 }

@@ -30,28 +30,33 @@ Graph graph_of_SimpleMap(SimpleMap map){
 
 Couple resultat_graphe_simple(SimpleMap map, Coordonnee coordonneeBegin, Coordonnee coordonneeEnd){
 
-	unsigned int begin = coordonneeBegin.x * map_width + coordonneeBegin.y;
-	unsigned int end = coordonneeEnd.x * map_width + coordonneeEnd.y;
+	uint16_t begin = coordonneeBegin.x * map_width + coordonneeBegin.y;
+	uint16_t end = coordonneeEnd.x * map_width + coordonneeEnd.y;
 
 	Graph graph = graph_of_SimpleMap(map);
 
 	bool* mark;
 
-	mark = malloc( graph.n * sizeof(bool));
+	mark = calloc( graph.n, sizeof(bool));
 
 	if(mark == NULL){
 		printf("Cannot create mark table");
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0; i < graph.n; i++)
+	for(uint32_t i = 0; i < graph.n; i++)
 		mark[i] = false;
 
-	int* fathers;
+	uint32_t* fathers;
 
-	fathers = malloc( graph.n * sizeof(int));
+	fathers = calloc( graph.n, sizeof(uint32_t));
 
-	for(int i = 0; i < graph.n; i++)
+	if( !fathers ){
+		printf("Unable to allocate the memory for the fathers");
+		exit(MALLOC_ERROR);
+	}
+
+	for(uint32_t i = 0; i < graph.n; i++)
 		fathers[i] = -1;
 
 	Queue queue = create_Queue();

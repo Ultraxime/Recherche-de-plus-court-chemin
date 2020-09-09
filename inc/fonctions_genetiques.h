@@ -1,13 +1,13 @@
 #ifndef FONCTIONS_GENETIQUES_H_INCLUDED
 #define FONCTIONS_GENETIQUES_H_INCLUDED
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include "structures.h"
 
 Population first_Population();
 
-Population evolution(Population, int*);
+Population evolution(Population, uint32_t*);
 
 Individu wedding(Individu, Individu);
 
@@ -19,6 +19,6 @@ Couple life_simple(SimpleMap, Coordonnee, Coordonnee, Individu);
 
 Coordonnee next_step_simple(SimpleMap, Coordonnee, Individu);
 
-Couple resultat_genetique_simple(SimpleMap, Coordonnee, Coordonnee, SDL_Surface*);
+Couple resultat_genetique_simple(SimpleMap, SDL_Renderer*, SDL_Texture*, Coordonnee, Coordonnee);
 
 #endif

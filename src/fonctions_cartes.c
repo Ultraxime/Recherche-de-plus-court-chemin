@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include "structures.h"
 #include "fonctions_cartes.h"
@@ -33,7 +33,7 @@ SimpleMap simpleMap_from_DrawableMap(DrawableMap origin){
 			exit(MALLOC_ERROR);
 		}
 
-		for(uint16_t j = 0 ; j < map_height ; j++)
+		for (uint16_t j = 0 ; j < map_height ; j++)
 
 			map[i][j] = origin[i][j] > altitude;			//si l'altitude le permet cette case represente de la terre, de la mer sinon
 	}
@@ -42,20 +42,20 @@ SimpleMap simpleMap_from_DrawableMap(DrawableMap origin){
 }
 
 
-DrawableMap random_DrawableMap(int n, int m, //Dimension de la carte a créer
-								int pasN, int pasM ){//pas pour le gradient
+DrawableMap random_DrawableMap(uint16_t n, uint16_t m, //Dimension de la carte a créer
+								uint16_t pasN, uint16_t pasM ){//pas pour le gradient
 	DrawableMap map = NULL;
 
-	map = malloc(n*sizeof(char*));
+	map = calloc(n,sizeof(uint8_t*));
 
 	if(map == NULL){
 		printf("Cannot create the main table\n");
 		exit(MALLOC_ERROR);
 	}
 
-	for(int i = 0 ; i < n ; i++){
+	for(uint16_t i = 0 ; i < n ; i++){
 
-		map[i] = malloc(m*sizeof(char));
+		map[i] = calloc(m,sizeof(uint8_t));
 
 		if(map[i] == NULL){
 			printf("Cannot create table %d\n",i);
@@ -64,37 +64,37 @@ DrawableMap random_DrawableMap(int n, int m, //Dimension de la carte a créer
 
 		if(i%pasN == 0){
 
-			for(int j = 0 ; j < m ; j++){
+			for(uint16_t j = 0 ; j < m ; j++){
 				if(j%pasM == 0)
 					map[i][j] = rand() % 255;
 				else
 					map[i][j] = 0;
 			}
 		}else{
-			for(int j = 0 ; j < m ; j++)
+			for(uint16_t j = 0 ; j < m ; j++)
 				map[i][j] = 0;
 		}
 	}
 
-	for(int i = 0; i < n; i+=pasN){
+	for(uint16_t i = 0; i < n; i+=pasN){
 		
-		for(int k = 0; k < m - 1 ; k+=pasM){
+		for(uint16_t k = 0; k < m - 1 ; k+=pasM){
 
-			for(int j = 1; j < pasM; j++){
+			for(uint16_t j = 1; j < pasM; j++){
 
-				map[i][k+j] = (unsigned char) ( ( j * (unsigned int) map[i][ k + pasM ] + (pasM - j) * (unsigned int) map[i][k]) / pasM );			//barycentre des point aléatoire pour obtenir un grandient sur les lignes avec les aléas
+				map[i][k+j] = (uint8_t) ( ( j * (uint16_t) map[i][ k + pasM ] + (pasM - j) * (uint16_t) map[i][k]) / pasM );			//barycentre des point aléatoire pour obtenir un grandient sur les lignes avec les aléas
 
 			}
 		}
 	}
 
-	for(int j = 0; j < m; j++){
+	for(uint16_t j = 0; j < m; j++){
 
-		for(int k = 0; k < n - 1 ; k+=pasN){
+		for(uint16_t k = 0; k < n - 1 ; k+=pasN){
 
-			for(int i = 1; i < pasN; i++){
+			for(uint16_t i = 1; i < pasN; i++){
 
-				map[k+i][j] = (unsigned char) ( ( i * (unsigned int) map[ k + pasN ][j] + (pasN - i) * (unsigned int) map[k][j] ) / pasN );			//barycentre sur les colonnes
+				map[k+i][j] = (uint8_t) ( ( i * (uint16_t) map[ k + pasN ][j] + (pasN - i) * (uint16_t) map[k][j] ) / pasN );			//barycentre sur les colonnes
 			}
 		}
 	}
@@ -158,31 +158,31 @@ DrawableMap bruit_Perlin_DrawableMap(){
 
 	//Creation de carte avec des gradiants de plus en plus fin
 
-	int pasN = n - 1;
-	int pasM = m - 1;
+	uint16_t pasN = n - 1;
+	uint16_t pasM = m - 1;
 
 	List maps = create_Element( random_DrawableMap(n, m, pasN, pasM) );			//Creation de la List qui contiendra les cartes à sommer
 
 	while(!is_empty_List(divN) && !is_empty_List(divM)){
 		
 		if(pasN < pasM)
-			pasM /= int_of_void( pop_List( &divM ) );
+			pasM /= int16_of_void( pop_List( &divM ) );
 		else
-			pasN /= int_of_void( pop_List( &divN ) );
+			pasN /= int16_of_void( pop_List( &divN ) );
 
 		maps = push_value_List( random_DrawableMap(n, m, pasN, pasM), maps);
 	}
 
 	while( !is_empty_List(divN) ){
 
-		pasN /= int_of_void( pop_List( &divN ) );
+		pasN /= int16_of_void( pop_List( &divN ) );
 
 		maps = push_value_List( random_DrawableMap(n, m, pasN, pasM), maps);	
 	}
 
 	while( !is_empty_List(divM) ){
 
-		pasM /= int_of_void( pop_List( &divM ) );
+		pasM /= int16_of_void( pop_List( &divM ) );
 
 		maps = push_value_List( random_DrawableMap(n, m, pasN, pasM), maps);
 	}
@@ -198,7 +198,7 @@ DrawableMap bruit_Perlin_DrawableMap(){
 		exit(MALLOC_ERROR);
 	}
 
-	unsigned long puissance = 1;
+	uint64_t puissance = 1;
 
 	for (uint16_t i = 0; i < map_width; i++) {
 
@@ -211,7 +211,7 @@ DrawableMap bruit_Perlin_DrawableMap(){
 
 		for (uint16_t j = 0; j < map_height; j++)
 
-			longMap[i][j] = puissance * (unsigned long) tmpMap[i][j];
+			longMap[i][j] = puissance * (uint64_t) tmpMap[i][j];
 	}
 
 	puissance += PUISSANCE;
@@ -227,20 +227,20 @@ DrawableMap bruit_Perlin_DrawableMap(){
 
 			for(uint16_t j = 0; j < map_height; j++)
 
-				longMap[i][j] += puissance * (unsigned long) tmpMap[i][j];
+				longMap[i][j] += puissance * (uint64_t) tmpMap[i][j];
 
 		clear_DrawableMap(tmpMap, n);
 
 		puissance += PUISSANCE;
 	}
 
-	unsigned long min = min_LongMap(longMap, map_width, map_height);
+	uint64_t min = min_LongMap(longMap, map_width, map_height);
 
-	unsigned long max = max_LongMap(longMap, map_width, map_height) - min;
+	uint64_t max = max_LongMap(longMap, map_width, map_height) - min;
 
 	DrawableMap map = NULL;
 
-	map = malloc(map_width * sizeof(char*));
+	map = malloc(map_width * sizeof(uint8_t *));
 
 	if (map == NULL) {
 		printf("Cannot create the main table\n");
@@ -249,7 +249,7 @@ DrawableMap bruit_Perlin_DrawableMap(){
 
 	for (uint16_t i = 0; i < map_width; i++) {
 
-		map[i] = malloc(map_height * sizeof(char));
+		map[i] = calloc(map_height, sizeof(uint8_t));
 
 		if ( map[i] == NULL ) {
 			printf("Cannot create table %d\n", i);
@@ -258,7 +258,7 @@ DrawableMap bruit_Perlin_DrawableMap(){
 
 		for (uint16_t j = 0; j < map_height; j++)
 
-			map[i][j] = (unsigned char) ( ( 255 * (longMap[i][j] - min)) / max );
+			map[i][j] = (uint8_t) ( ( 255 * (longMap[i][j] - min)) / max );
 	}
 
 	clear_LongMap(longMap, map_width);
@@ -266,24 +266,24 @@ DrawableMap bruit_Perlin_DrawableMap(){
 	return map;
 }
 
-void draw_DrawableMap(DrawableMap map, SDL_Surface* screen, Coordonnee begin, Coordonnee end){
+Screen screen_from_DrawableMap(DrawableMap map){
 
-	if(SDL_LockSurface(screen) < 0 ){
-        printf("Unable to lock screen : %s\n", SDL_GetError());
-        exit(LOCK_SURFACE_ERROR);
+    Screen pixels;
+    pixels = calloc( map_width * map_height, sizeof(Uint32));
+ 
+    if( !pixels ){
+    	printf("Unable to allocate the memory for the screen");
+    	exit(MALLOC_ERROR);
     }
 
-    Uint32 *pixels;
-    pixels = screen->pixels;
-
-    Uint32 darkBlue = SDL_MapRGB(screen->format, 70, 169, 224);
-    Uint32 blue = SDL_MapRGB(screen->format, 160, 203, 237);
-    Uint32 lightBlue = SDL_MapRGB(screen->format, 213, 234, 248);
+    Uint32 darkBlue = color(70, 169, 224);
+    Uint32 blue = color(160, 203, 237);
+    Uint32 lightBlue = color(213, 234, 248);
     
-    Uint32 green = SDL_MapRGB(screen->format, 167, 210, 101);
-    Uint32 lightOrange = SDL_MapRGB(screen->format, 254, 240, 191);
-    Uint32 orange = SDL_MapRGB(screen->format, 251, 207, 112);
-    Uint32 brown = SDL_MapRGB(screen->format, 243, 159, 20);
+    Uint32 green = color(167, 210, 101);
+    Uint32 lightOrange = color(254, 240, 191);
+    Uint32 orange = color(251, 207, 112);
+    Uint32 brown = color(243, 159, 20);
 
     for (uint16_t i = 0; i < map_width; i++) {
 
@@ -293,7 +293,7 @@ void draw_DrawableMap(DrawableMap map, SDL_Surface* screen, Coordonnee begin, Co
     			
     			pixels[j*map_width + i] = darkBlue;
     		
-    		} else if(map[i][j] < (3 * (unsigned int) altitude ) / 4) {
+    		} else if(map[i][j] < (3 * (uint16_t) altitude ) / 4) {
 
     			pixels[j*map_width + i] = blue;
 
@@ -309,7 +309,7 @@ void draw_DrawableMap(DrawableMap map, SDL_Surface* screen, Coordonnee begin, Co
 
     			pixels[j*map_width + i] = orange;
     			
-    		} else if(map[i][j] > 255 - (3 * (unsigned int) (255 - altitude) ) / 4) {
+    		} else if(map[i][j] > 255 - (3 * (uint16_t) (255 - altitude) ) / 4) {
 
     			pixels[j*map_width + i] = lightOrange;
     			
@@ -321,36 +321,24 @@ void draw_DrawableMap(DrawableMap map, SDL_Surface* screen, Coordonnee begin, Co
     	}
     }
 
-    Uint32 begin_color = SDL_MapRGB(screen->format, 255, 255, 0);
-
-    draw_coordonnee(begin, pixels, begin_color);
-
-    Uint32 end_color = SDL_MapRGB(screen->format, 0, 0, 0);
-
-    draw_coordonnee(end, pixels, end_color);
-
-    SDL_UnlockSurface(screen);
-
-    SDL_Flip(screen);
-
-    pause();
-
+    return pixels;
 }
 
 
-void draw_SimpleMap(SimpleMap map, SDL_Surface* screen, Coordonnee begin, Coordonnee end){
+Screen screen_from_SimpleMap(SimpleMap map){
 
-	if(SDL_LockSurface(screen) < 0 ){
-        printf("Unable to lock screen : %s\n", SDL_GetError());
-        exit(LOCK_SURFACE_ERROR);
+
+    Screen pixels;
+    pixels = calloc( map_width * map_height, sizeof(Uint32));
+
+    if( !pixels ){
+    	printf("Unable to alloc the memory for the screen");
+    	exit(MALLOC_ERROR);
     }
 
-    Uint32 *pixels;
-    pixels = screen->pixels;
-
-    Uint32 blue = SDL_MapRGB(screen->format, 160, 203, 237);
+    Uint32 blue = color(160, 203, 237);
     
-    Uint32 green = SDL_MapRGB(screen->format, 167, 210, 101);
+    Uint32 green = color(167, 210, 101);
     
     for (uint16_t i = 0; i < map_width; i++) {
 
@@ -368,46 +356,24 @@ void draw_SimpleMap(SimpleMap map, SDL_Surface* screen, Coordonnee begin, Coordo
     	}
     }
 
-    Uint32 begin_color = SDL_MapRGB(screen->format, 255, 255, 0);
-
-    draw_coordonnee(begin, pixels, begin_color);
-
-    Uint32 end_color = SDL_MapRGB(screen->format, 0, 0, 0);
-
-    draw_coordonnee(end, pixels, end_color);
-
-    SDL_UnlockSurface(screen);
-
-    SDL_Flip(screen);
+    return pixels;
 
 }
 
-void draw_way(List way, SDL_Surface* screen){
-
-	if(SDL_LockSurface(screen) < 0 ){
-        printf("Unable to lock screen : %s\n", SDL_GetError());
-        exit(LOCK_SURFACE_ERROR);
-    }
+void draw_way(List way, Screen pixels){
 
     Coordonnee coordonnee;
 
-	Uint32 *pixels;
-    pixels = screen->pixels;
-
-    Uint32 color = SDL_MapRGB(screen->format, 255, 0, 0);
+    Uint32 red = color(255, 0, 0);
 
 	while(!is_empty_List(way)){
 		coordonnee = coordonnee_of_void(pop_List(&way));
-		draw_coordonnee(coordonnee, pixels, color);
+		draw_coordonnee(coordonnee, pixels, red);
 	}
-
-	SDL_UnlockSurface(screen);
-
-    SDL_Flip(screen);
 
 }
 
-void draw_coordonnee(Coordonnee coordonnee, Uint32* pixels, Uint32 color){
+void draw_coordonnee(Coordonnee coordonnee, Screen pixels, Uint32 color){
 
 	pixels[coordonnee.x + coordonnee.y * map_width ] = color;
 	pixels[coordonnee.x+1 + coordonnee.y * map_width ] = color;
@@ -418,4 +384,15 @@ void draw_coordonnee(Coordonnee coordonnee, Uint32* pixels, Uint32 color){
 	pixels[coordonnee.x + coordonnee.y * map_width - map_width ] = color;
 	pixels[coordonnee.x+1 + coordonnee.y * map_width - map_width ] = color;
 	pixels[coordonnee.x-1 + coordonnee.y * map_width - map_width ] = color;
+}
+
+void show(SDL_Renderer* renderer, SDL_Texture* texture, Screen pixels){
+
+	SDL_UpdateTexture(texture, NULL, pixels, map_width * sizeof(Uint32) );
+	SDL_RenderClear(renderer); 
+    SDL_RenderCopy(renderer, texture, NULL, NULL); 
+    SDL_RenderPresent(renderer);
+
+    pause();
+
 }
