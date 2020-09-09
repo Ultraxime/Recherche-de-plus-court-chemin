@@ -34,11 +34,6 @@ Element* create_Element(void* value){
 
 //Operations sur les List
 
-List list_of_void(void* list){
-
-	return *( (List*) &list);
-}
-
 List create_List(){
 
 	return NULL;
@@ -142,12 +137,27 @@ bool is_empty_List(List list){
 	return list == NULL;
 }
 
+void* void_of_List(List list){
+
+	return *( (void**) &list );
+}
+
+List list_of_void(void* list){
+
+	return *( (List*) &list);
+}
+
 
 //Operations sur les SimpleMap
 
 SimpleMap simpleMap_of_void(void* map){
 
 	return *((SimpleMap*)&map);
+}
+
+void* void_of_SimpleMap(SimpleMap map){
+
+	return *( (void**) &map);
 }
 
 void clear_SimpleMap(SimpleMap map, uint16_t n){
@@ -282,6 +292,16 @@ Individu random_Individu(){
 							rand() % 4);
 }
 
+Individu individu_of_void(void* individu){
+
+	return *( (Individu*) &individu);
+}
+
+void* void_of_Individu(Individu individu){
+
+	return *( (void**) &individu);
+}
+
 
 //Operations sur les Resultat
 
@@ -311,6 +331,15 @@ Couple create_Couple(void* key, void* value){
 	return couple;
 }
 
+Couple couple_of_void(void* couple){
+
+	return *( (Couple*) &couple );
+}
+
+void* void_of_Couple(Couple couple){
+
+	return *( (void**) &couple );
+}
 
 
 //Operations sur les Graph

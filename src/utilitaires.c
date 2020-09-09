@@ -173,3 +173,14 @@ void kill_all_threads(){
 		pthread_cancel( pthread_of_void( pop_List( &activeThread ) ) );
 	}
 }
+
+
+uint16_t pos(pthread_t* t, pthread_t val){
+
+	uint16_t i = 0;
+
+	while( t[i] != val )
+		i++;
+
+	return i;
+}

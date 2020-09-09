@@ -15,8 +15,6 @@ Element* create_Element(void*);
 
 //Operations sur les List
 
-List list_of_void(void*);
-
 List create_List();
 
 List push_List(Element*, List);
@@ -33,11 +31,17 @@ void clear_List(List);
 
 bool is_empty_List(List);
 
+void* void_of_List(List);
+
+List list_of_void(void*);
+
 
 
 //Operations sur les SimpleMap
 
 SimpleMap simpleMap_of_void(void*);
+
+void* void_of_SimpleMap(SimpleMap);
 
 void clear_SimpleMap(SimpleMap, uint16_t);
 
@@ -83,6 +87,10 @@ Individu create_Individu(uint16_t, uint16_t, uint16_t, uint16_t, uint8_t);
 
 Individu random_Individu();
 
+Individu individu_of_void(void*);
+
+void* void_of_Individu(Individu);
+
 
 
 //Operations sur les Resultat
@@ -94,6 +102,10 @@ Resultat create_Resultat(Population, uint32_t*, List*);
 //Operations sur les Couple
 
 Couple create_Couple(void*, void*);
+
+Couple couple_of_void(void*);
+
+void* void_of_Couple(Couple);
 
 
 
@@ -126,6 +138,7 @@ uint32_t int32_of_void(void*);
 void* void_of_int16(uint16_t);
 
 void* void_of_int32(uint32_t);
+
 
 
 //Operations sur les pthread_t

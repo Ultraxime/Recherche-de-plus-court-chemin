@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <math.h>
 
+#include <sys/wait.h>
+
 #include "fonctions_genetiques.h" 
 #include "utilitaires_structures.h"
 #include "errors.h"
@@ -393,7 +395,7 @@ Couple resultat_genetique_simple(SimpleMap map, SDL_Renderer* renderer, SDL_Text
 			printf("Génération : %d\n", i );
 		#endif
 
-		Couple couple = generation_simple(map, begin, end, population);
+		Couple couple = generation_simple_para(map, begin, end, population);
 
 		uint32_t* resultats = couple.key;
 
@@ -428,4 +430,113 @@ Couple resultat_genetique_simple(SimpleMap map, SDL_Renderer* renderer, SDL_Text
 
 	return	create_Couple(chemin, void_of_int32(min))	;
 
+}
+
+
+void* life_simple_para(void* args){
+
+	List list = list_of_void(args);
+
+	Individu indiv = individu_of_void( pop_List( &list ) );
+	Coordonnee begin = coordonnee_of_void( pop_List( &list ) );
+	Coordonnee end = coordonnee_of_void( pop_List( &list ) );
+	SimpleMap map = simpleMap_of_void( pop_List( &list ) );
+
+	return void_of_Couple( life_simple(map, begin, end, indiv) );
+
+}
+
+Couple generation_simple_para(SimpleMap map, Coordonnee begin, Coordonnee end, Population population){
+
+	uint32_t* scores;
+
+	scores = calloc(TAILLE, sizeof(uint32_t));
+
+	if(scores == NULL){
+		printf("Cannot create scores table");
+		exit(MALLOC_ERROR);
+	}
+
+	Couple couple;
+
+	uint32_t min = LIMITE +1;										//Cela permet d'etre sur de tracer un chemin mais s'il n'est pas intéressant
+
+	pthread_t* threads = NULL;
+
+	threads = calloc( TAILLE, sizeof(pthread_t));
+
+	List args = push_value_List( void_of_Coordonnee(begin),
+								 push_value_List( void_of_Coordonnee(end),
+								 				  push_value_List( void_of_SimpleMap(map), 
+								 				  				   create_List())));
+
+	if(threads == NULL){
+		printf("Cannot create thread table");
+		exit(MALLOC_ERROR);
+	}
+
+	List chemin = create_List();
+
+	int thread = 0;
+
+	for(uint16_t i = 0; i < TAILLE; i++){
+
+		#ifdef DEBUG
+			if(i%10==0)printf("%d\n", i);
+		#endif
+
+		int created = pthread_create( &(threads[i]), NULL, life_simple_para, void_of_List( push_value_List( void_of_Individu(population[i]), args)));
+
+		while( created != 0 ){
+			
+			int statuts;
+			pthread_t waited = wait(&statuts);
+			void* res;
+			pthread_join(waited, &res);
+			thread --;
+			
+			uint16_t j = pos(threads, waited);
+			couple = couple_of_void(res);
+			scores[j] = int32_of_void(couple.key);
+
+			if(scores[j] < min){
+				min = scores[j];
+
+				clear_List(chemin);
+				chemin = list_of_void(couple.value);
+			}else{
+				clear_List(list_of_void(couple.value));
+			}
+
+			created = pthread_create( &(threads[i]), NULL, life_simple_para, void_of_List( push_value_List( void_of_Individu(population[i]), args)));
+		}
+
+		if(created == 0){
+			thread ++;
+		}
+
+	}
+
+	while( thread > 0){
+		int statuts;
+		pthread_t waited = wait(&statuts);
+		void* res;
+		pthread_join(waited, &res);
+		thread --;
+		
+		uint16_t j = pos(threads, waited);
+		couple = couple_of_void(res);
+		scores[j] = int32_of_void(couple.key);
+
+		if(scores[j] < min){
+			min = scores[j];
+
+			clear_List(chemin);
+			chemin = list_of_void(couple.value);
+		}else{
+			clear_List(list_of_void(couple.value));
+		}
+	}
+
+	return create_Couple(scores, chemin);
 }

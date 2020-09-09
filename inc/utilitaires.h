@@ -22,4 +22,6 @@ void* interruption(void*);
 
 void kill_all_threads();
 
+uint16_t pos(pthread_t*, pthread_t);
+
 #endif

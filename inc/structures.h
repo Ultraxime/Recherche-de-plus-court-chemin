@@ -6,6 +6,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <pthread.h>
+
 
 typedef uint8_t** DrawableMap;
 

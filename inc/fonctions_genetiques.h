@@ -23,4 +23,9 @@ Coordonnee next_step_simple(SimpleMap, Coordonnee, Individu);
 
 Couple resultat_genetique_simple(SimpleMap, SDL_Renderer*, SDL_Texture*, Coordonnee, Coordonnee);
 
+void* life_simple_para(void*);
+
+Couple generation_simple_para(SimpleMap, Coordonnee, Coordonnee, Population);
+
+
 #endif
